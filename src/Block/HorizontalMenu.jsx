@@ -6,7 +6,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { map } from 'lodash';
-import { List } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 
@@ -30,17 +30,17 @@ const View = ({ properties, data, tocEntries }) => {
       ) : (
         ''
       )}
-      <List bulleted>
+      <Menu>
         {map(
           tocEntries,
           ([level, entry, id]) =>
             entry && (
-              <List.Item key={id} className={`headline-${level}`}>
+              <Menu.Item key={id} className={`headline-${level}`}>
                 <AnchorLink href={`#${id}`}>{entry}</AnchorLink>
-              </List.Item>
+              </Menu.Item>
             ),
         )}
-      </List>
+      </Menu>
     </>
   );
 };

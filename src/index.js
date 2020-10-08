@@ -3,6 +3,7 @@ import TocEdit from './Block/TocEdit';
 import DefaultTocRenderer from './Block/DefaultTocRenderer';
 import MultiSelectWidget from './Widgets/MultiSelectWidget';
 import BlockExtensionWidget from './Widgets/BlockExtensionWidget';
+import HorizontalMenu from './Block/HorizontalMenu';
 
 const applyConfig = (config) => {
   config.blocks.blocksConfig.toc = {
@@ -15,6 +16,12 @@ const applyConfig = (config) => {
         id: 'default',
         title: 'Listing (default)',
         view: DefaultTocRenderer,
+        schemaExtender: null,
+      },
+      {
+        id: 'horizontalMenu',
+        title: 'Horizontal Menu',
+        view: HorizontalMenu,
         schemaExtender: null,
       },
     ],

@@ -7,6 +7,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { map } from 'lodash';
 import { injectIntl } from 'react-intl';
+import cx from 'classnames';
 import { blocks } from '~/config';
 import withBlockExtension from '../withBlockExtension';
 
@@ -38,7 +39,7 @@ const View = (props) => {
   const Renderer = extension?.view;
 
   return (
-    <div className="block table-of-contents">
+    <div className={cx('block table-of-contents', extension.id)}>
       {Renderer ? (
         <Renderer {...props} tocEntries={tocEntries} properties={properties} />
       ) : (
