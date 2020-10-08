@@ -9,30 +9,15 @@ import { map } from 'lodash';
 import { List } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
-import { blocks } from '~/config';
-
-import {
-  getBlocksFieldname,
-  getBlocksLayoutFieldname,
-} from '@plone/volto/helpers';
 
 /**
  * View toc block class.
  * @class View
  * @extends Component
  */
-const View = ({ properties, data }) => {
-  const blocksFieldname = getBlocksFieldname(properties);
-  const blocksLayoutFieldname = getBlocksLayoutFieldname(properties);
-  const tocEntries = map(properties[blocksLayoutFieldname].items, (id) => {
-    const block = properties[blocksFieldname][id];
-    return blocks.blocksConfig[block['@type']]?.tocEntry
-      ? blocks.blocksConfig[block['@type']]?.tocEntry(block, data)
-      : null;
-  });
-
+const View = ({ properties, data, tocEntries }) => {
   return (
-    <div className="block table-of-contents">
+    <>
       {data.title ? (
         <h2>
           {data.title || (
@@ -48,15 +33,15 @@ const View = ({ properties, data }) => {
       <List bulleted>
         {map(
           tocEntries,
-          (entry) =>
+          ([level, entry, id]) =>
             entry && (
-              <List.Item key={entry.id} className={entry.level}>
-                <AnchorLink href={`#${entry.id}`}>{entry.text}</AnchorLink>
+              <List.Item key={id} className={`headline-${level}`}>
+                <AnchorLink href={`#${id}`}>{entry}</AnchorLink>
               </List.Item>
             ),
         )}
       </List>
-    </div>
+    </>
   );
 };
 

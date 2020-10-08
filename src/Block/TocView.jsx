@@ -24,19 +24,23 @@ const View = (props) => {
   const { properties, data, extension } = props;
   const blocksFieldname = getBlocksFieldname(properties);
   const blocksLayoutFieldname = getBlocksLayoutFieldname(properties);
+  const levels =
+    data.levels?.length > 0
+      ? data.levels.map((l) => parseInt(l.slice(1)))
+      : [1, 2, 3, 4, 5, 6];
   const tocEntries = map(properties[blocksLayoutFieldname].items, (id) => {
     const block = properties[blocksFieldname][id];
-    return blocks.blocksConfig[block['@type']]?.tocEntry
-      ? blocks.blocksConfig[block['@type']]?.tocEntry(block, data)
-      : null;
-  });
+    if (!blocks.blocksConfig[block['@type']]?.tocEntry) return null;
+    const entry = blocks.blocksConfig[block['@type']]?.tocEntry(block, data);
+    return entry ? [...entry, id] : null;
+  }).filter((e) => !!e && levels.includes(e[0]));
 
   const Renderer = extension?.view;
 
   return (
     <div className="block table-of-contents">
       {Renderer ? (
-        <Renderer {...props} entries={tocEntries} properties={properties} />
+        <Renderer {...props} tocEntries={tocEntries} properties={properties} />
       ) : (
         <div>View extension not found</div>
       )}
