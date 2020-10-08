@@ -268,11 +268,9 @@ class SelectWidget extends Component {
                   dataValue.push(obj.value);
                 }
                 return onChange(id, dataValue);
+              } else {
+                return onChange(id, []);
               }
-              return onChange(
-                id,
-                data.value === 'no-value' ? undefined : data.value,
-              );
             }}
           />
         )}
