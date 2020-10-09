@@ -39,7 +39,7 @@ const View = (props) => {
   const Renderer = extension?.view;
 
   return (
-    <div className={cx('block table-of-contents', extension.id)}>
+    <div className={cx('table-of-contents', extension.id)}>
       {Renderer ? (
         <Renderer {...props} tocEntries={tocEntries} properties={properties} />
       ) : (

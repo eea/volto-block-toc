@@ -11,9 +11,7 @@ class Edit extends Component {
     const schema = TableOfContentsSchema();
     schema.properties.block_extension.blockProps = this.props;
     return (
-      <div className="block selected">
-        <div className="block-inner-wrapper" />
-
+      <>
         <TocView {...this.props} />
 
         <SidebarPortal selected={this.props.selected}>
@@ -30,7 +28,7 @@ class Edit extends Component {
           />
           )}
         </SidebarPortal>
-      </div>
+      </>
     );
   }
 }
