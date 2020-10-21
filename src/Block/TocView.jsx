@@ -31,6 +31,10 @@ const View = (props) => {
       : [1, 2, 3, 4, 5, 6];
   const tocEntries = map(properties[blocksLayoutFieldname].items, (id) => {
     const block = properties[blocksFieldname][id];
+    if (typeof block === 'undefined') {
+      return null;
+    }
+
     if (!blocks.blocksConfig[block['@type']]?.tocEntry) return null;
     const entry = blocks.blocksConfig[block['@type']]?.tocEntry(block, data);
     return entry ? [...entry, id] : null;
