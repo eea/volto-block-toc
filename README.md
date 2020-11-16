@@ -4,25 +4,21 @@
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-block-toc%2Fdevelop&subject=develop)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-block-toc/job/develop/display/redirect)
 
 
-[Volto](https://github.com/plone/volto) add-on
-
-## Features
-
-###
-
-Demo GIF
+[Volto](https://github.com/plone/volto) add-on: Table of Contents with Slate support
 
 ## Getting started
 
 1. Create new volto project if you don't already have one:
 
    ```
-   $ npm install -g @plone/create-volto-app
-   $ create-volto-app my-volto-project
+   $ npm install -g yo @plone/generator-volto
+   $ yo @plone/volto my-volto-project --addon @eeacms/volto-block-toc
+
    $ cd my-volto-project
+   $ yarn add -W @eeacms/volto-block-toc
    ```
 
-1. Update `package.json`:
+1. If you already have a volto project, just update `package.json`:
 
    ```JSON
    "addons": [
@@ -30,7 +26,7 @@ Demo GIF
    ],
 
    "dependencies": {
-       "@eeacms/volto-block-toc": "1.0.0"
+       "@eeacms/volto-block-toc": "^1.0.0"
    }
    ```
 
