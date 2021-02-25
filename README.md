@@ -26,7 +26,7 @@
    ],
 
    "dependencies": {
-       "@eeacms/volto-block-toc": "^1.0.0"
+       "@eeacms/volto-block-toc": "^2.0.0"
    }
    ```
 

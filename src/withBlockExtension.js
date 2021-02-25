@@ -3,13 +3,13 @@
  */
 
 import React from 'react';
-import { blocks } from '~/config';
+import config from '@plone/volto/registry';
 
 export default (WrappedComponent) => (props) => {
   const { data } = props;
   const { block_extension } = data;
   const type = data['@type'];
-  const extensions = blocks.blocksConfig[type].extensions || [];
+  const extensions = config.blocks.blocksConfig[type].extensions || [];
 
   const index = extensions.findIndex(
     (conf) => conf.id === (block_extension || 'default'),
