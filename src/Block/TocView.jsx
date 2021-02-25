@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { map } from 'lodash';
 import { injectIntl } from 'react-intl';
 import cx from 'classnames';
-import { blocks } from '~/config';
+import config from '@plone/volto/registry';
 import withBlockExtension from '../withBlockExtension';
 
 import {
@@ -35,8 +35,11 @@ const View = (props) => {
       return null;
     }
 
-    if (!blocks.blocksConfig[block['@type']]?.tocEntry) return null;
-    const entry = blocks.blocksConfig[block['@type']]?.tocEntry(block, data);
+    if (!config.blocks.blocksConfig[block['@type']]?.tocEntry) return null;
+    const entry = config.blocks.blocksConfig[block['@type']]?.tocEntry(
+      block,
+      data,
+    );
     return entry ? [...entry, id] : null;
   }).filter((e) => !!e && levels.includes(e[0]));
 
