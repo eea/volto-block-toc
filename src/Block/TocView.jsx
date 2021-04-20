@@ -40,8 +40,18 @@ const View = (props) => {
       block,
       data,
     );
-    return entry ? [...entry, id] : null;
-  }).filter((e) => !!e && levels.includes(e[0]));
+    let entries = [];
+    if (entry) {
+      if (Array.isArray(entry[0])) {
+        entries = entries.concat(entry);
+      } else {
+        entries.push([...entry, id]);
+      }
+    }
+    return entries.length ? entries : null;
+  }).filter((e) => {
+    return !!e && levels.includes(e[0][0]);
+  });
 
   const Renderer = extension?.view;
 

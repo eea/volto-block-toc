@@ -31,15 +31,18 @@ const View = ({ properties, data, tocEntries }) => {
         ''
       )}
       <Menu>
-        {map(
-          tocEntries,
-          ([level, entry, id]) =>
-            entry && (
-              <Menu.Item key={id} className={`headline-${level}`}>
-                <AnchorLink href={`#${id}`}>{entry}</AnchorLink>
-              </Menu.Item>
-            ),
-        )}
+        {map(tocEntries, (entries) => {
+          return map(entries, (myentry) => {
+            const [level, entry, id] = myentry;
+            return (
+              entry && (
+                <Menu.Item key={id} className={`headline-${level}`}>
+                  <AnchorLink href={`#${id}`}>{entry}</AnchorLink>
+                </Menu.Item>
+              )
+            );
+          });
+        })}
       </Menu>
     </>
   );

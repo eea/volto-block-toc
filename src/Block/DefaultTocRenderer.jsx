@@ -31,15 +31,18 @@ const View = ({ properties, data, tocEntries }) => {
         ''
       )}
       <List bulleted>
-        {map(
-          tocEntries,
-          ([level, entry, id]) =>
-            entry && (
-              <List.Item key={id} className={`headline-${level}`}>
-                <AnchorLink href={`#${id}`}>{entry}</AnchorLink>
-              </List.Item>
-            ),
-        )}
+        {map(tocEntries, (entries) => {
+          return map(entries, (myentry) => {
+            const [level, entry, id] = myentry;
+            return (
+              entry && (
+                <List.Item key={id} className={`headline-${level}`}>
+                  <AnchorLink href={`#${id}`}>{entry}</AnchorLink>
+                </List.Item>
+              )
+            );
+          });
+        })}
       </List>
     </>
   );
