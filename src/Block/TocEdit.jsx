@@ -26,7 +26,6 @@ class Edit extends Component {
             }}
             formData={this.props.data}
           />
-          )}
         </SidebarPortal>
       </>
     );
