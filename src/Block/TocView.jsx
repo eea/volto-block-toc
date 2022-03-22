@@ -65,8 +65,6 @@ const View = (props) => {
       const entry = tocEntries[id];
       if (entry.level === rootLevel) {
         entries.push(entry);
-      }
-      if (entry.level === rootLevel) {
         prevEntry = entry;
         return;
       }
