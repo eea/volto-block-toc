@@ -10,12 +10,30 @@ import { List } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 
+const RenderListItems = ({ items }) => {
+  return map(items, (item) => {
+    const { id, level, title } = item;
+    return (
+      item && (
+        <List.Item key={id} className={`headline-${level}`}>
+          <AnchorLink href={`#${id}`}>{title}</AnchorLink>
+          {item.items?.length > 0 && (
+            <List.List role="list">
+              <RenderListItems items={item.items} />
+            </List.List>
+          )}
+        </List.Item>
+      )
+    );
+  });
+};
+
 /**
  * View toc block class.
  * @class View
  * @extends Component
  */
-const View = ({ properties, data, tocEntries }) => {
+const View = ({ data, tocEntries }) => {
   return (
     <>
       {data.title && !data.hide_title ? (
@@ -30,19 +48,8 @@ const View = ({ properties, data, tocEntries }) => {
       ) : (
         ''
       )}
-      <List bulleted>
-        {map(tocEntries, (entries) => {
-          return map(entries, (myentry) => {
-            const [level, entry, id] = myentry;
-            return (
-              entry && (
-                <List.Item key={id} className={`headline-${level}`}>
-                  <AnchorLink href={`#${id}`}>{entry}</AnchorLink>
-                </List.Item>
-              )
-            );
-          });
-        })}
+      <List ordered={data.ordered} bulleted={!data.ordered}>
+        <RenderListItems items={tocEntries} />
       </List>
     </>
   );

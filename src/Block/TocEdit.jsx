@@ -8,7 +8,7 @@ import TocView from './TocView';
 
 class Edit extends Component {
   render() {
-    const schema = TableOfContentsSchema();
+    const schema = TableOfContentsSchema(this.props);
     schema.properties.block_extension.blockProps = this.props;
     return (
       <>

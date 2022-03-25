@@ -5,7 +5,6 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { map } from 'lodash';
 import { injectIntl } from 'react-intl';
 import cx from 'classnames';
 import config from '@plone/volto/registry';
@@ -25,33 +24,71 @@ const View = (props) => {
   const { properties, data, extension } = props;
   const blocksFieldname = getBlocksFieldname(properties);
   const blocksLayoutFieldname = getBlocksLayoutFieldname(properties);
-  const levels =
-    data.levels?.length > 0
-      ? data.levels.map((l) => parseInt(l.slice(1)))
-      : [1, 2, 3, 4, 5, 6];
-  const tocEntries = map(properties[blocksLayoutFieldname].items, (id) => {
-    const block = properties[blocksFieldname][id];
-    if (typeof block === 'undefined') {
-      return null;
-    }
-
-    if (!config.blocks.blocksConfig[block['@type']]?.tocEntry) return null;
-    const entry = config.blocks.blocksConfig[block['@type']]?.tocEntry(
-      block,
-      data,
-    );
+  const levels = React.useMemo(
+    () =>
+      data.levels?.length > 0
+        ? data.levels.map((l) => parseInt(l.slice(1)))
+        : [1, 2, 3, 4, 5, 6],
+    [data],
+  );
+  const tocEntries = React.useMemo(() => {
+    let rootLevel = Infinity;
     let entries = [];
-    if (entry) {
-      if (Array.isArray(entry[0])) {
-        entries = entries.concat(entry);
-      } else {
-        entries.push([...entry, id]);
+    let prevEntry = {};
+    let tocEntries = {};
+    let tocEntriesLayout = [];
+
+    properties[blocksLayoutFieldname].items.forEach((id) => {
+      const block = properties[blocksFieldname][id];
+      if (typeof block === 'undefined') {
+        return null;
       }
-    }
-    return entries.length ? entries : null;
-  }).filter((e) => {
-    return !!e && levels.includes(e[0][0]);
-  });
+      if (!config.blocks.blocksConfig[block['@type']]?.tocEntry) return null;
+      const entry = config.blocks.blocksConfig[block['@type']]?.tocEntry(
+        block,
+        data,
+      );
+      if (entry) {
+        const level = entry[0];
+        const title = entry[1];
+        const items = [];
+        if (!level || !title || !levels.includes(level)) return;
+        tocEntriesLayout.push(id);
+        tocEntries[id] = { level, title, items, id };
+        if (level < rootLevel) {
+          rootLevel = level;
+        }
+      }
+    });
+
+    tocEntriesLayout.forEach((id) => {
+      const entry = tocEntries[id];
+      if (entry.level === rootLevel) {
+        entries.push(entry);
+        prevEntry = entry;
+        return;
+      }
+      if (entry.level > prevEntry.level) {
+        entry.parentId = prevEntry.id;
+        prevEntry.items.push(entry);
+        prevEntry = entry;
+      } else if (entry.level < prevEntry.level) {
+        let parent = tocEntries[prevEntry.parentId];
+        while (entry.level <= parent.level) {
+          parent = tocEntries[parent.parentId];
+        }
+        entry.parentId = parent.id;
+        parent.items.push(entry);
+        prevEntry = entry;
+      } else {
+        entry.parentId = prevEntry.parentId;
+        tocEntries[prevEntry.parentId].items.push(entry);
+        prevEntry = entry;
+      }
+    });
+
+    return entries;
+  }, [data, levels, properties, blocksFieldname, blocksLayoutFieldname]);
 
   const Renderer = extension?.view;
 
