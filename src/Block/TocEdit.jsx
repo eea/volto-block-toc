@@ -12,7 +12,7 @@ class Edit extends Component {
     schema.properties.block_extension.blockProps = this.props;
     return (
       <>
-        <TocView {...this.props} />
+        <TocView {...this.props} mode="edit" />
 
         <SidebarPortal selected={this.props.selected}>
           <InlineForm

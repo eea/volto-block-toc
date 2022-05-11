@@ -7,6 +7,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import cx from 'classnames';
+import { Message } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
 import withBlockExtension from '../withBlockExtension';
 
@@ -92,8 +93,14 @@ const View = (props) => {
 
   const Renderer = extension?.view;
 
+  console.log(tocEntries);
+
   return (
     <div className={cx('table-of-contents', extension.id)}>
+      {props.mode === 'edit' && !data.title && !tocEntries.length && (
+        <Message>Table of content</Message>
+      )}
+
       {Renderer ? (
         <Renderer {...props} tocEntries={tocEntries} properties={properties} />
       ) : (
