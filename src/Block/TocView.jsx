@@ -93,8 +93,6 @@ const View = (props) => {
 
   const Renderer = extension?.view;
 
-  console.log(tocEntries);
-
   return (
     <div className={cx('table-of-contents', extension.id)}>
       {props.mode === 'edit' && !data.title && !tocEntries.length && (
