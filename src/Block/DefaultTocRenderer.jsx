@@ -10,17 +10,21 @@ import { List } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 
-const RenderListItems = ({ items }) => {
+const RenderListItems = ({ items, data }) => {
   return map(items, (item) => {
     const { id, level, title } = item;
     return (
       item && (
-        <List.Item key={id} className={`headline-${level}`}>
+        <List.Item key={id} className={`item headline-${level}`} as="li">
           <AnchorLink href={`#${id}`}>{title}</AnchorLink>
           {item.items?.length > 0 && (
-            <List.List role="list">
-              <RenderListItems items={item.items} />
-            </List.List>
+            <List
+              ordered={data.ordered}
+              bulleted={!data.ordered}
+              as={data.ordered ? 'ol' : 'ul'}
+            >
+              <RenderListItems items={item.items} data={data} />
+            </List>
           )}
         </List.Item>
       )
@@ -48,8 +52,12 @@ const View = ({ data, tocEntries }) => {
       ) : (
         ''
       )}
-      <List ordered={data.ordered} bulleted={!data.ordered}>
-        <RenderListItems items={tocEntries} />
+      <List
+        ordered={data.ordered}
+        bulleted={!data.ordered}
+        as={data.ordered ? 'ol' : 'ul'}
+      >
+        <RenderListItems items={tocEntries} data={data} />
       </List>
     </>
   );

@@ -7,6 +7,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import cx from 'classnames';
+import { Message } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
 import withBlockExtension from '../withBlockExtension';
 
@@ -52,9 +53,9 @@ const View = (props) => {
         const level = entry[0];
         const title = entry[1];
         const items = [];
-        if (!level || !title || !levels.includes(level)) return;
+        if (!level || !levels.includes(level)) return;
         tocEntriesLayout.push(id);
-        tocEntries[id] = { level, title, items, id };
+        tocEntries[id] = { level, title: title || block.plaintext, items, id };
         if (level < rootLevel) {
           rootLevel = level;
         }
@@ -68,6 +69,7 @@ const View = (props) => {
         prevEntry = entry;
         return;
       }
+      if (!prevEntry.id) return;
       if (entry.level > prevEntry.level) {
         entry.parentId = prevEntry.id;
         prevEntry.items.push(entry);
@@ -94,6 +96,10 @@ const View = (props) => {
 
   return (
     <div className={cx('table-of-contents', extension.id)}>
+      {props.mode === 'edit' && !data.title && !tocEntries.length && (
+        <Message>Table of content</Message>
+      )}
+
       {Renderer ? (
         <Renderer {...props} tocEntries={tocEntries} properties={properties} />
       ) : (
