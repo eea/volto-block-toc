@@ -53,9 +53,9 @@ const View = (props) => {
         const level = entry[0];
         const title = entry[1];
         const items = [];
-        if (!level || !title || !levels.includes(level)) return;
+        if (!level || !levels.includes(level)) return;
         tocEntriesLayout.push(id);
-        tocEntries[id] = { level, title, items, id };
+        tocEntries[id] = { level, title: title || block.plaintext, items, id };
         if (level < rootLevel) {
           rootLevel = level;
         }
@@ -69,6 +69,7 @@ const View = (props) => {
         prevEntry = entry;
         return;
       }
+      if (!prevEntry.id) return;
       if (entry.level > prevEntry.level) {
         entry.parentId = prevEntry.id;
         prevEntry.items.push(entry);
