@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { map } from 'lodash';
 import { Menu } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import AnchorLink from 'react-anchor-link-smooth-scroll';
+import AnchorLink from '@eeacms/volto-block-toc/AnchorLink';
 
 const RenderMenuItems = ({ items }) => {
   return map(items, (item) => {

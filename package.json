@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-block-toc",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "volto-block-toc: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
@@ -17,10 +17,13 @@
     "type": "git",
     "url": "git@github.com:eea/volto-block-toc.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "smoothscroll-polyfill": "^0.4.4"
+  },
   "devDependencies": {
     "@cypress/code-coverage": "^3.9.5",
-    "babel-plugin-transform-class-properties": "^6.24.1"
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "md5": "^2.3.0"
   },
   "scripts": {
     "release": "release-it",
