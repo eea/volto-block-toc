@@ -34,8 +34,10 @@ class AnchorLink extends Component {
       () => {
         // Scroll done
         document.removeEventListener('scroll', this.onScroll);
+        if (!this.link.current) return;
         const id = this.link.current.getAttribute('href').slice(1);
         const $anchor = document.getElementById(id);
+        if (!$anchor) return;
         const offsetTop =
           $anchor.getBoundingClientRect().top +
           window.scrollY -
@@ -54,8 +56,10 @@ class AnchorLink extends Component {
   }
   smoothScroll(e) {
     e.preventDefault();
+    if (!this.link.current) return;
     const id = this.link.current.getAttribute('href').slice(1);
     const $anchor = document.getElementById(id);
+    if (!$anchor) return;
     const offsetTop =
       $anchor.getBoundingClientRect().top + window.scrollY - this.getOffset();
     document.addEventListener('scroll', this.onScroll);
