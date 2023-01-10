@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Sticky } from 'semantic-ui-react';
 
 class AnchorLink extends Component {
   constructor(props) {
