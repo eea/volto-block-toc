@@ -9,13 +9,10 @@ import { map } from 'lodash';
 import { Menu, Sticky } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from '@eeacms/volto-block-toc/AnchorLink';
-// import { StickyContainer, Sticky } from 'react-sticky';
 
 const RenderMenuItems = ({ items }) => {
-  // console.log('items', items);
   return map(items, (item) => {
     const { id, level, title } = item;
-    console.log('id, level, items', id, level, title);
     return (
       item && (
         <React.Fragment key={id}>
@@ -35,7 +32,6 @@ const RenderMenuItems = ({ items }) => {
  * @extends Component
  */
 const View = ({ data, tocEntries }) => {
-  console.log('toc entries', tocEntries);
   const stickyRef = useRef(null);
   return (
     <>
@@ -52,9 +48,8 @@ const View = ({ data, tocEntries }) => {
         ''
       )}
       <Sticky
-        onUnstick={(e) => console.log('HERE', e)}
+        context={__CLIENT__ && document.getElementById('page-document')}
         ref={stickyRef}
-        offset={40}
       >
         <Menu>
           <RenderMenuItems items={tocEntries} />
