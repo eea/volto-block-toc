@@ -47,8 +47,13 @@ const View = ({ data, tocEntries }) => {
       ) : (
         ''
       )}
+
       <Sticky
-        context={__CLIENT__ && document.getElementById('page-document')}
+        active={data.sticky}
+        context={
+          (__CLIENT__ && document.getElementById('page-document')) ||
+          (__CLIENT__ && document.getElementById('page-edit'))
+        }
         ref={stickyRef}
       >
         <Menu>

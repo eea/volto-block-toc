@@ -11,6 +11,7 @@ export const TableOfContentsSchema = ({ data }) => {
           'title',
           'hide_title',
           ...(block_extension === 'default' ? ['ordered'] : []),
+          ...(block_extension === 'horizontalMenu' ? ['sticky'] : []),
           'levels',
           'block_extension',
         ],
@@ -22,6 +23,10 @@ export const TableOfContentsSchema = ({ data }) => {
       },
       hide_title: {
         title: 'Hide title',
+        type: 'boolean',
+      },
+      sticky: {
+        title: 'Sticky on top',
         type: 'boolean',
       },
       levels: {
