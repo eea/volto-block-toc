@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-        GIT_NAME = "volto-pdf-block"
+        GIT_NAME = "volto-block-toc"
         NAMESPACE = "@eeacms"
         SONARQUBE_TAGS = "volto.eea.europa.eu"
         DEPENDENCIES = ""
