@@ -6,6 +6,8 @@ import loadable from '@loadable/component';
 
 import { FormFieldWrapper } from '@plone/volto/components';
 
+import noop from 'lodash/noop';
+
 import {
   Option,
   DropdownIndicator,
@@ -137,9 +139,9 @@ class SelectWidget extends Component {
     choices: [],
     loading: false,
     value: null,
-    onChange: () => {},
-    onBlur: () => {},
-    onClick: () => {},
+    onChange: noop,
+    onBlur: noop,
+    onClick: noop,
     onEdit: null,
     onDelete: null,
   };

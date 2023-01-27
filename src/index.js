@@ -1,5 +1,5 @@
 import TocView from './Block/TocView';
-import TocEdit from './Block/TocEdit';
+import TocEdit from './Block/Edit';
 import DefaultTocRenderer from './Block/DefaultTocRenderer';
 import MultiSelectWidget from './Widgets/MultiSelectWidget';
 import BlockExtensionWidget from './Widgets/BlockExtensionWidget';

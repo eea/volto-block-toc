@@ -22,7 +22,6 @@ import {
  * @extends Component
  */
 const View = (props) => {
-  // console.log('props in TocView', props);
   const { properties, data, extension } = props;
   const blocksFieldname = getBlocksFieldname(properties);
   const blocksLayoutFieldname = getBlocksLayoutFieldname(properties);
