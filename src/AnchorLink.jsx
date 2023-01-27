@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import noop from 'lodash/noop';
+
 class AnchorLink extends Component {
   constructor(props) {
     super(props);
@@ -80,7 +82,7 @@ class AnchorLink extends Component {
         role="link"
         tabIndex={0}
         onClick={this.smoothScroll}
-        onKeyUp={() => {}}
+        onKeyUp={noop}
       >
         {children}
       </a>
