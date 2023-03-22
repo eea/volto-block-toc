@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 
 import { SidebarPortal } from '@plone/volto/components';
-import InlineForm from '@plone/volto/components/manage/Form/InlineForm';
+import BlockDataForm from '@plone/volto/components/manage/Form/BlockDataForm';
 
-import { TableOfContentsSchema } from './schema';
-import TocView from './TocView';
+import TableOfContentsSchema from './schema';
+import View from './TocView';
 
 class Edit extends Component {
   render() {
     const schema = TableOfContentsSchema(this.props);
-    schema.properties.block_extension.blockProps = this.props;
+
     return (
       <>
-        <TocView {...this.props} mode="edit" />
+        <View {...this.props} mode="edit" />
 
         <SidebarPortal selected={this.props.selected}>
-          <InlineForm
+          <BlockDataForm
             schema={schema}
             title={schema.title}
             onChangeField={(id, value) => {
@@ -24,6 +24,7 @@ class Edit extends Component {
                 [id]: value,
               });
             }}
+            onChangeBlock={this.props.onChangeBlock}
             formData={this.props.data}
           />
         </SidebarPortal>
