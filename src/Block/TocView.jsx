@@ -8,15 +8,20 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import cx from 'classnames';
 import { Message } from 'semantic-ui-react';
-import config from '@plone/volto/registry';
-import { withBlockExtensions } from '@plone/volto/helpers';
-
 import {
+  withBlockExtensions,
   getBlocksFieldname,
   getBlocksLayoutFieldname,
 } from '@plone/volto/helpers';
+import config from '@plone/volto/registry';
 
-export const getBlockDataFormEntries = ({ blocks, blocks_layout, tocData }) => {
+export const getBlocksTocEntries = (properties, tocData) => {
+  const blocksFieldName = getBlocksFieldname(properties);
+  const blocksLayoutFieldname = getBlocksLayoutFieldname(properties);
+
+  const blocks = properties[blocksFieldName];
+  const blocks_layout = properties[blocksLayoutFieldname];
+
   const levels =
     tocData.levels?.length > 0
       ? tocData.levels.map((l) => parseInt(l.slice(1)))
@@ -83,19 +88,13 @@ const View = (props) => {
   const { variation } = props;
   const metadata = props.metadata || props.properties;
 
-  const blocksFieldname = getBlocksFieldname(metadata);
-  const blocksLayoutFieldname = getBlocksLayoutFieldname(metadata);
-
   const tocEntries = React.useMemo(() => {
     let entries = [];
     let prevEntry = {};
 
-    const { rootLevel, tocEntries, tocEntriesLayout } = getBlockDataFormEntries(
-      {
-        blocks: metadata[blocksFieldname],
-        blocks_layout: metadata[blocksLayoutFieldname],
-        tocData: data,
-      },
+    const { rootLevel, tocEntries, tocEntriesLayout } = getBlocksTocEntries(
+      metadata,
+      data,
     );
 
     tocEntriesLayout.forEach((id) => {
@@ -126,7 +125,7 @@ const View = (props) => {
     });
 
     return entries;
-  }, [data, metadata, blocksFieldname, blocksLayoutFieldname]);
+  }, [data, metadata]);
 
   const Renderer = variation?.view;
   return (
