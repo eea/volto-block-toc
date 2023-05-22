@@ -1,5 +1,5 @@
-export const TableOfContentsSchema = ({ data }) => {
-  const { block_extension = 'default' } = data;
+export default ({ data }) => {
+  const { variation = 'default' } = data;
 
   return {
     title: 'Table of Contents',
@@ -10,9 +10,9 @@ export const TableOfContentsSchema = ({ data }) => {
         fields: [
           'title',
           'hide_title',
-          ...(block_extension === 'default' ? ['ordered'] : []),
+          ...(variation === 'default' ? ['ordered'] : []),
+          ...(variation === 'horizontalMenu' ? ['sticky'] : []),
           'levels',
-          'block_extension',
         ],
       },
     ],
@@ -24,10 +24,13 @@ export const TableOfContentsSchema = ({ data }) => {
         title: 'Hide title',
         type: 'boolean',
       },
+      sticky: {
+        title: 'Sticky on top',
+        type: 'boolean',
+      },
       levels: {
         title: 'Entries',
         isMulti: true,
-        widget: 'toc_multi_select_widget',
         choices: [
           ['h1', 'h1'],
           ['h2', 'h2'],
@@ -36,11 +39,6 @@ export const TableOfContentsSchema = ({ data }) => {
           ['h5', 'h5'],
           ['h6', 'h6'],
         ],
-      },
-      block_extension: {
-        title: 'Extension',
-        widget: 'block_extension',
-        defaultValue: 'default',
       },
       ordered: {
         title: 'Ordered',

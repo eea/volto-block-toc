@@ -1,8 +1,6 @@
 import TocView from './Block/TocView';
 import TocEdit from './Block/TocEdit';
 import DefaultTocRenderer from './Block/DefaultTocRenderer';
-import MultiSelectWidget from './Widgets/MultiSelectWidget';
-import BlockExtensionWidget from './Widgets/BlockExtensionWidget';
 import HorizontalMenu from './Block/HorizontalMenu';
 
 const applyConfig = (config) => {
@@ -26,9 +24,6 @@ const applyConfig = (config) => {
       },
     ],
   };
-
-  config.widgets.widget.toc_multi_select_widget = MultiSelectWidget;
-  config.widgets.widget.block_extension = BlockExtensionWidget;
 
   return config;
 };

@@ -3,10 +3,10 @@
  * @module components/manage/Blocks/ToC/View
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { map } from 'lodash';
-import { Menu } from 'semantic-ui-react';
+import { Menu, Sticky } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from '@eeacms/volto-block-toc/AnchorLink';
 
@@ -32,6 +32,7 @@ const RenderMenuItems = ({ items }) => {
  * @extends Component
  */
 const View = ({ data, tocEntries }) => {
+  const stickyRef = useRef(null);
   return (
     <>
       {data.title && !data.hide_title ? (
@@ -46,9 +47,19 @@ const View = ({ data, tocEntries }) => {
       ) : (
         ''
       )}
-      <Menu>
-        <RenderMenuItems items={tocEntries} />
-      </Menu>
+
+      <Sticky
+        active={data.sticky}
+        context={
+          (__CLIENT__ && document.getElementById('page-document')) ||
+          (__CLIENT__ && document.getElementById('page-edit'))
+        }
+        ref={stickyRef}
+      >
+        <Menu>
+          <RenderMenuItems items={tocEntries} />
+        </Menu>
+      </Sticky>
     </>
   );
 };
