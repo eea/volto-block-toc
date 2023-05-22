@@ -8,12 +8,12 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import cx from 'classnames';
 import { Message } from 'semantic-ui-react';
+import config from '@plone/volto/registry';
 import {
   withBlockExtensions,
   getBlocksFieldname,
   getBlocksLayoutFieldname,
 } from '@plone/volto/helpers';
-import config from '@plone/volto/registry';
 
 export const getBlocksTocEntries = (properties, tocData) => {
   const blocksFieldName = getBlocksFieldname(properties);
@@ -35,7 +35,7 @@ export const getBlocksTocEntries = (properties, tocData) => {
     const block = blocks[id];
     const blockConfig = config.blocks.blocksConfig[block['@type']];
 
-    if (!block && !blockConfig) {
+    if (!block || !blockConfig) {
       return null;
     }
     if (!blockConfig.tocEntries && !blockConfig.tocEntry) {
@@ -84,8 +84,7 @@ export const getBlocksTocEntries = (properties, tocData) => {
  * @extends Component
  */
 const View = (props) => {
-  const { data } = props;
-  const { variation } = props;
+  const { data, variation } = props;
   const metadata = props.metadata || props.properties;
 
   const tocEntries = React.useMemo(() => {
