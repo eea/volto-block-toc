@@ -56,6 +56,7 @@ export const getBlocksTocEntries = (properties, tocData) => {
       const level = entry[0];
       const title = entry[1];
       const items = [];
+      if (!title?.trim()) return;
       if (!level || !levels.includes(level)) return;
       tocEntriesLayout.push(i);
       tocEntries[i] = {
