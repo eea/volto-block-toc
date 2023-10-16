@@ -26,8 +26,8 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "cypress-fail-fast": "^5.0.1",
     "md5": "^2.3.0",
-    "husky": "*",
-    "lint-staged": "*"
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json}": [
