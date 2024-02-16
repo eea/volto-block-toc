@@ -1,7 +1,6 @@
 import TocView from './Block/TocView';
 import TocEdit from './Block/TocEdit';
-import DefaultTocRenderer from './Block/DefaultTocRenderer';
-import HorizontalMenu from './Block/HorizontalMenu';
+import variations from './Block/variations';
 
 const applyConfig = (config) => {
   config.blocks.blocksConfig.toc = {
@@ -9,20 +8,7 @@ const applyConfig = (config) => {
     sidebarTab: 1,
     view: TocView,
     edit: TocEdit,
-    extensions: [
-      {
-        id: 'default',
-        title: 'Listing (default)',
-        view: DefaultTocRenderer,
-        schemaExtender: null,
-      },
-      {
-        id: 'horizontalMenu',
-        title: 'Horizontal Menu',
-        view: HorizontalMenu,
-        schemaExtender: null,
-      },
-    ],
+    variations,
   };
 
   return config;

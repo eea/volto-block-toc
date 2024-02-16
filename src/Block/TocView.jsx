@@ -64,6 +64,8 @@ export const getBlocksTocEntries = (properties, tocData) => {
         title: title || block.plaintext,
         items,
         id: i,
+        override_toc: block.override_toc,
+        plaintext: block.plaintext,
       };
       if (level < rootLevel) {
         rootLevel = level;
@@ -128,6 +130,7 @@ const View = (props) => {
   }, [data, metadata]);
 
   const Renderer = variation?.view;
+
   return (
     <div className={cx('table-of-contents', variation?.id)}>
       {props.mode === 'edit' && !data.title && !tocEntries.length && (
