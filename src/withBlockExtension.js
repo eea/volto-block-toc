@@ -5,7 +5,7 @@
 import React from 'react';
 import config from '@plone/volto/registry';
 
-export default (WrappedComponent) => (props) => {
+const withBlockExtensions = (WrappedComponent) => (props) => {
   const { data } = props;
   const { block_extension } = data;
   const type = data['@type'];
@@ -31,3 +31,5 @@ export default (WrappedComponent) => (props) => {
     />
   );
 };
+
+export default withBlockExtensions;
