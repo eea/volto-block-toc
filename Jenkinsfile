@@ -2,8 +2,9 @@ pipeline {
   tools {
     jdk 'Java17'
   }
-  agent any
-
+  agent {
+    node { label 'docker-host' }
+  }
   environment {
     GIT_NAME = "volto-block-toc"
     NAMESPACE = "@eeacms"
