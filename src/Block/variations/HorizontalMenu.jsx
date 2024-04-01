@@ -4,15 +4,20 @@ import { map } from 'lodash';
 import { Menu, Dropdown } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
+import Slugger from 'github-slugger';
+import { normalizeString } from './helpers';
 
 const RenderMenuItems = ({ items }) => {
   return map(items, (item) => {
-    const { id, level, title } = item;
+    const { id, level, title, override_toc, plaintext } = item;
+    const slug = override_toc
+      ? Slugger.slug(normalizeString(plaintext))
+      : Slugger.slug(normalizeString(title)) || id;
     return (
       item && (
         <React.Fragment key={id}>
           <Menu.Item className={`headline-${level}`}>
-            <AnchorLink href={`#${id}`}>{title}</AnchorLink>
+            <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
           </Menu.Item>
           {item.items?.length > 0 && <RenderMenuItems items={item.items} />}
         </React.Fragment>

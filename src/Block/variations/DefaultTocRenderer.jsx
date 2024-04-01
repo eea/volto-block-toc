@@ -9,8 +9,8 @@ import { map } from 'lodash';
 import { List } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Slugger from 'github-slugger';
-import { UniversalLink } from '@plone/volto/components';
-import { normalizeString } from '@plone/volto/helpers';
+import AnchorLink from 'react-anchor-link-smooth-scroll';
+import { normalizeString } from './helpers';
 
 const RenderListItems = ({ items, data }) => {
   return map(items, (item) => {
@@ -21,7 +21,7 @@ const RenderListItems = ({ items, data }) => {
     return (
       item && (
         <List.Item key={id} className={`item headline-${level}`} as="li">
-          <UniversalLink href={`#${slug}`}>{title}</UniversalLink>
+          <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
           {item.items?.length > 0 && (
             <List
               ordered={data.ordered}
