@@ -8,16 +8,16 @@ import PropTypes from 'prop-types';
 import { map } from 'lodash';
 import { List } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import Slugger from 'github-slugger';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
+import { toSlug } from '@eeacms/volto-anchors/helpers';
 import { normalizeString } from './helpers';
 
 const RenderListItems = ({ items, data }) => {
   return map(items, (item) => {
     const { id, level, title, override_toc, plaintext } = item;
     const slug = override_toc
-      ? Slugger.slug(normalizeString(plaintext))
-      : Slugger.slug(normalizeString(title)) || id;
+      ? toSlug(normalizeString(plaintext))
+      : toSlug(normalizeString(title)) || id;
     return (
       item && (
         <List.Item key={id} className={`item headline-${level}`} as="li">
