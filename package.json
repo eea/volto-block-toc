@@ -18,7 +18,7 @@
     "url": "git@github.com:eea/volto-block-toc.git"
   },
   "dependencies": {
-    "@eeacms/volto-anchros": "*",
+    "@eeacms/volto-anchors": "*",
     "smoothscroll-polyfill": "^0.4.4"
   },
   "devDependencies": {
