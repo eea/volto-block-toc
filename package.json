@@ -13,11 +13,15 @@
     "plone",
     "react"
   ],
+  "addons": [
+    "@eeacms/volto-anchors"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:eea/volto-block-toc.git"
   },
   "dependencies": {
+    "@eeacms/volto-anchors": "*",
     "smoothscroll-polyfill": "^0.4.4"
   },
   "devDependencies": {
