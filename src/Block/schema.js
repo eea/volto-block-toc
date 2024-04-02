@@ -12,6 +12,7 @@ export default ({ data }) => {
           'hide_title',
           ...(variation === 'default' ? ['ordered'] : []),
           ...(variation === 'horizontalMenu' ? ['sticky'] : []),
+          ...(variation === 'accordionMenu' ? ['sticky'] : []),
           'levels',
         ],
       },

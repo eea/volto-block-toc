@@ -1,3 +1,4 @@
+import AccordionMenu from './AccordionMenu';
 import DefaultTocRenderer from './DefaultTocRenderer';
 import HorizontalMenu from './HorizontalMenu';
 
@@ -12,6 +13,11 @@ const ToCVariations = [
     id: 'horizontalMenu',
     title: 'Horizontal Menu',
     view: HorizontalMenu,
+  },
+  {
+    id: 'accordionMenu',
+    title: 'Accordion Menu',
+    view: AccordionMenu,
   },
 ];
 
