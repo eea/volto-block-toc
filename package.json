@@ -13,9 +13,6 @@
     "plone",
     "react"
   ],
-  "addons": [
-    "@eeacms/volto-anchors"
-  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:eea/volto-block-toc.git"
