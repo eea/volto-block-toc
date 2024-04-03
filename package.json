@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "smoothscroll-polyfill": "^0.4.4",
-    "github-slugger": "*"
+    "github-slugger": "1.4.0"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.10.0",
