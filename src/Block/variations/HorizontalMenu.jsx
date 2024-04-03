@@ -6,6 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { toSlug } from '@eeacms/volto-anchors/helpers';
 import { normalizeString } from './helpers';
+import './less/horizontal-menu.less';
 
 const RenderMenuItems = ({ items }) => {
   return map(items, (item) => {

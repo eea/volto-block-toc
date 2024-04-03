@@ -1,0 +1,36 @@
+.table-of-contents.horizontalMenu.sticky-toc {
+  position: fixed !important;
+  z-index: 1 !important;
+  top: 0 !important;
+  width: inherit;
+}
+
+.table-of-contents.horizontalMenu .hidden {
+  z-index: -1;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.table-of-contents.horizontalMenu .hidden-dropdown {
+  display: none !important;
+}
+
+.table-of-contents.horizontalMenu .item.toc-dropdown {
+  position: absolute !important;
+  right: 0;
+  height: 100%;
+}
+
+.table-of-contents.horizontalMenu > .ui.menu {
+  position: relative;
+}
+
+.table-of-contents.horizontalMenu .item.toc-dropdown .focused > a {
+  border: 2px solid black !important;
+  border-radius: 4px;
+}
+
+.ui.menu .dropdown.item .menu {
+  right: 0;
+  left: auto;
+}
