@@ -18,7 +18,8 @@
     "url": "git@github.com:eea/volto-block-toc.git"
   },
   "dependencies": {
-    "smoothscroll-polyfill": "^0.4.4"
+    "smoothscroll-polyfill": "^0.4.4",
+    "github-slugger": "*"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.10.0",
