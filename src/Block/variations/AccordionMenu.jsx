@@ -48,12 +48,13 @@ const View = ({ data, tocEntries }) => {
     if (data.sticky) {
       const toc = document.querySelector('.accordionMenu');
       const tocPos = toc ? toc.offsetTop : 0;
+      const tocHeight = toc ? toc.getBoundingClientRect().top : 0;
 
       const handleScroll = () => {
         let scrollPos = window.scrollY;
-        if (scrollPos > tocPos && toc) {
+        if (scrollPos > tocPos + tocHeight && toc) {
           toc.classList.add('sticky-toc');
-        } else if (scrollPos <= tocPos && toc) {
+        } else if (scrollPos <= tocPos + tocHeight && toc) {
           toc.classList.remove('sticky-toc');
         }
       };
