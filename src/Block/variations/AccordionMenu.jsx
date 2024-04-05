@@ -3,39 +3,60 @@
  * @module components/manage/Blocks/ToC/View
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { map } from 'lodash';
 import { List } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
+import { Accordion, Icon } from 'semantic-ui-react';
 import { toSlug } from '@eeacms/volto-anchors/helpers';
 import { normalizeString } from './helpers';
 import './less/accordion-menu.less';
 
-const RenderListItems = ({ items, data }) => {
-  return map(items, (item) => {
-    const { id, level, title, override_toc, plaintext } = item;
-    const slug = override_toc
-      ? toSlug(normalizeString(plaintext))
-      : toSlug(normalizeString(title)) || id;
-    return (
-      item && (
-        <List.Item key={id} className={`item headline-${level}`} as="li">
-          <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
-          {item.items?.length > 0 && (
-            <List
-              ordered={data.ordered}
-              bulleted={!data.ordered}
-              as={data.ordered ? 'ol' : 'ul'}
+const RenderAccordionItems = ({ items }) => {
+  const [activeItems, setActiveItems] = useState({});
+
+  const handleClick = (index, hasSubItems) => {
+    if (hasSubItems) {
+      setActiveItems((prevActiveItems) => ({
+        ...prevActiveItems,
+        [index]: !prevActiveItems[index],
+      }));
+    }
+  };
+
+  return (
+    <Accordion fluid styled>
+      {items.map((item, index) => {
+        const { title, override_toc, plaintext, items: subItems } = item;
+        const slug = override_toc
+          ? toSlug(normalizeString(plaintext))
+          : toSlug(normalizeString(title));
+
+        const isActive = !!activeItems[index];
+        const hasSubItems = subItems && subItems.length > 0;
+
+        return (
+          <React.Fragment key={index}>
+            <Accordion.Title
+              active={isActive}
+              onClick={() => handleClick(index, hasSubItems)}
             >
-              <RenderListItems items={item.items} data={data} />
-            </List>
-          )}
-        </List.Item>
-      )
-    );
-  });
+              <Icon name="dropdown" />
+              <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
+            </Accordion.Title>
+            <Accordion.Content active={isActive}>
+              {subItems && subItems.length > 0 ? (
+                <RenderAccordionItems items={subItems} />
+              ) : (
+                <p>Your content here</p>
+              )}
+            </Accordion.Content>
+          </React.Fragment>
+        );
+      })}
+    </Accordion>
+  );
 };
 
 /**
@@ -86,7 +107,7 @@ const View = ({ data, tocEntries }) => {
         bulleted={!data.ordered}
         as={data.ordered ? 'ol' : 'ul'}
       >
-        <RenderListItems items={tocEntries} data={data} />
+        <RenderAccordionItems items={tocEntries} data={data} />
       </List>
     </>
   );
