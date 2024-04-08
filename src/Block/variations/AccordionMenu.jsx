@@ -5,7 +5,6 @@
 
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { List } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { Accordion, Icon } from 'semantic-ui-react';
@@ -42,14 +41,14 @@ const RenderAccordionItems = ({ items }) => {
               active={isActive}
               onClick={() => handleClick(index, hasSubItems)}
             >
-              <Icon name="dropdown" />
+              {subItems && subItems.length > 0 && (
+                <Icon name="dropdown" className={isActive ? 'rotated' : ''} />
+              )}
               <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
             </Accordion.Title>
             <Accordion.Content active={isActive}>
-              {subItems && subItems.length > 0 ? (
+              {subItems && subItems.length > 0 && (
                 <RenderAccordionItems items={subItems} />
-              ) : (
-                <p>Your content here</p>
               )}
             </Accordion.Content>
           </React.Fragment>
@@ -102,13 +101,7 @@ const View = ({ data, tocEntries }) => {
       ) : (
         ''
       )}
-      <List
-        ordered={data.ordered}
-        bulleted={!data.ordered}
-        as={data.ordered ? 'ol' : 'ul'}
-      >
-        <RenderAccordionItems items={tocEntries} data={data} />
-      </List>
+      <RenderAccordionItems items={tocEntries} data={data} />
     </>
   );
 };
