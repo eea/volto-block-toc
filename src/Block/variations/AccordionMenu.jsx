@@ -89,7 +89,7 @@ const View = ({ data, tocEntries }) => {
 
   return (
     <>
-      {data.title && !data.hide_title ? (
+      {data.title && !data.hide_title && (
         <h2>
           {data.title || (
             <FormattedMessage
@@ -98,8 +98,6 @@ const View = ({ data, tocEntries }) => {
             />
           )}
         </h2>
-      ) : (
-        ''
       )}
       <RenderAccordionItems items={tocEntries} data={data} />
     </>
