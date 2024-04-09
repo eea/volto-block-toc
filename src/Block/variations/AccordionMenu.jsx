@@ -42,7 +42,7 @@ const RenderAccordionItems = ({ items }) => {
               onClick={() => handleClick(index, hasSubItems)}
             >
               {subItems && subItems.length > 0 && (
-                <Icon name="dropdown" className={isActive ? 'rotated' : ''} />
+                <Icon name={isActive ? 'angle up' : 'angle right'} />
               )}
               <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
             </Accordion.Title>
@@ -64,25 +64,56 @@ const RenderAccordionItems = ({ items }) => {
  * @extends Component
  */
 const View = ({ data, tocEntries }) => {
+  //get relative offsetTop of an element
+  function getOffsetTop(elem) {
+    let offsetTop = 0;
+    do {
+      if (!isNaN(elem.offsetTop)) {
+        offsetTop += elem.offsetTop;
+      }
+    } while ((elem = elem.offsetParent));
+    return offsetTop;
+  }
+
   useEffect(() => {
     if (data.sticky) {
       const toc = document.querySelector('.accordionMenu');
-      const tocPos = toc ? toc.offsetTop : 0;
-      const tocHeight = toc ? toc.getBoundingClientRect().top : 0;
+      const parent = toc.parentElement;
+      const tocHeight = toc ? getOffsetTop(toc) : 0;
+
+      const updateTocWidth = () => {
+        if (toc.classList.contains('sticky-toc')) {
+          const parentStyle = window.getComputedStyle(toc.parentElement);
+          const parentPaddingLeft = parseFloat(parentStyle.paddingLeft);
+          const parentPaddingRight = parseFloat(parentStyle.paddingRight);
+          const parentWidth =
+            toc.parentElement.offsetWidth -
+            parentPaddingLeft -
+            parentPaddingRight +
+            'px';
+          toc.style.width = parentWidth;
+        }
+      };
 
       const handleScroll = () => {
         let scrollPos = window.scrollY;
-        if (scrollPos > tocPos + tocHeight && toc) {
+        if (scrollPos > tocHeight && toc) {
+          updateTocWidth();
           toc.classList.add('sticky-toc');
-        } else if (scrollPos <= tocPos + tocHeight && toc) {
+          if (!parent.className.includes('column')) {
+            toc.classList.add('not-column');
+          }
+        } else if (scrollPos <= tocHeight && toc) {
           toc.classList.remove('sticky-toc');
         }
       };
 
       window.addEventListener('scroll', handleScroll);
+      window.addEventListener('resize', updateTocWidth);
 
       return () => {
         window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', updateTocWidth);
       };
     }
   }, [data.sticky]);
