@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { Accordion, Icon } from 'semantic-ui-react';
-import { toSlug } from '@eeacms/volto-anchors/helpers';
+import Slugger from 'github-slugger';
 import { normalizeString } from './helpers';
 import './less/accordion-menu.less';
 
@@ -29,8 +29,8 @@ const RenderAccordionItems = ({ items }) => {
       {items.map((item, index) => {
         const { title, override_toc, plaintext, items: subItems } = item;
         const slug = override_toc
-          ? toSlug(normalizeString(plaintext))
-          : toSlug(normalizeString(title));
+          ? Slugger.slug(normalizeString(plaintext))
+          : Slugger.slug(normalizeString(title));
 
         const isActive = !!activeItems[index];
         const hasSubItems = subItems && subItems.length > 0;
