@@ -79,7 +79,7 @@ const View = ({ data, tocEntries }) => {
     if (data.sticky) {
       const toc = document.querySelector('.accordionMenu');
       const parent = toc.parentElement;
-      const tocHeight = toc ? getOffsetTop(toc) : 0;
+      const tocOffsetTop = toc ? getOffsetTop(toc) : 0;
 
       const updateTocWidth = () => {
         if (toc.classList.contains('sticky-toc')) {
@@ -97,13 +97,13 @@ const View = ({ data, tocEntries }) => {
 
       const handleScroll = () => {
         let scrollPos = window.scrollY;
-        if (scrollPos > tocHeight && toc) {
+        if (scrollPos > tocOffsetTop && toc) {
           updateTocWidth();
           toc.classList.add('sticky-toc');
           if (!parent.className.includes('column')) {
             toc.classList.add('not-column');
           }
-        } else if (scrollPos <= tocHeight && toc) {
+        } else if (scrollPos <= tocOffsetTop && toc) {
           toc.classList.remove('sticky-toc');
         }
       };
