@@ -5,8 +5,8 @@ import { Menu, Dropdown } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import Slugger from 'github-slugger';
-import { normalizeString } from '@plone/volto/helpers';
-import './horizontal-menu.less';
+import { normalizeString } from './helpers';
+import './less/horizontal-menu.less';
 
 const RenderMenuItems = ({ items }) => {
   return map(items, (item) => {

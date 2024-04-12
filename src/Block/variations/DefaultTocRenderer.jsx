@@ -10,7 +10,7 @@ import { List } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import Slugger from 'github-slugger';
-import { normalizeString } from '@plone/volto/helpers';
+import { normalizeString } from './helpers';
 
 const RenderListItems = ({ items, data }) => {
   return map(items, (item) => {
