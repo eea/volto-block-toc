@@ -13,16 +13,13 @@
     "plone",
     "react"
   ],
-  "addons": [
-    "@eeacms/volto-anchors"
-  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:eea/volto-block-toc.git"
   },
   "dependencies": {
-    "@eeacms/volto-anchors": "*",
-    "smoothscroll-polyfill": "^0.4.4"
+    "smoothscroll-polyfill": "^0.4.4",
+    "github-slugger": "1.4.0"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.10.0",
@@ -31,7 +28,8 @@
     "cypress-fail-fast": "^5.0.1",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
-    "md5": "^2.3.0"
+    "md5": "^2.3.0",
+    "dotenv": "^16.3.2"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json}": [
