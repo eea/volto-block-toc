@@ -4,15 +4,16 @@ import { map } from 'lodash';
 import { Menu, Dropdown } from 'semantic-ui-react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
-import { toSlug } from '@eeacms/volto-anchors/helpers';
-import { normalizeString } from './helpers';
+import Slugger from 'github-slugger';
+import { normalizeString } from '@plone/volto/helpers';
+import './horizontal-menu.less';
 
 const RenderMenuItems = ({ items }) => {
   return map(items, (item) => {
     const { id, level, title, override_toc, plaintext } = item;
     const slug = override_toc
-      ? toSlug(normalizeString(plaintext))
-      : toSlug(normalizeString(title)) || id;
+      ? Slugger.slug(normalizeString(plaintext))
+      : Slugger.slug(normalizeString(title)) || id;
     return (
       item && (
         <React.Fragment key={id}>
@@ -41,15 +42,15 @@ const View = ({ data, tocEntries }) => {
 
     // Get all divs that contain the items from the TOC, except the dropdown button
     const nested = document.querySelectorAll(
-      '.responsive-menu .item:not(.dropdown)',
+      '.responsive-menu .item:not(.toc-dropdown)',
     );
     const nestedArray = Object.values(nested);
     const middle = Math.ceil(nestedArray.length / 2);
     const firstHalfNested = nestedArray.slice(0, middle);
     const secondHalfNested = nestedArray.slice(middle);
 
-    const dropdown = document.querySelector('.dropdown');
-    const dropdownWidth = dropdown.offsetWidth;
+    const dropdown = document.querySelector('.toc-dropdown');
+    const dropdownWidth = dropdown.offsetWidth || 67;
 
     const firstHalfNestedHiddenItems = [];
 
@@ -176,11 +177,17 @@ const View = ({ data, tocEntries }) => {
         <Dropdown
           item
           text="More"
-          className="hidden-dropdown"
+          className="hidden-dropdown toc-dropdown"
           open={isDropdownOpen}
           onOpen={() => setIsDropdownOpen(true)}
           onClose={() => setIsDropdownOpen(false)}
           tabIndex={0}
+          aria-label="dropdown"
+          role="dropdown"
+          closeOnChange={true}
+          closeOnBlur={false}
+          openOnFocus={false}
+          closeOnEscape={true}
           onKeyDown={handleDropdownKeyDown}
         >
           <Dropdown.Menu>
