@@ -3,7 +3,7 @@
  * @module components/manage/Blocks/ToC/View
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
@@ -64,6 +64,8 @@ const RenderAccordionItems = ({ items }) => {
  * @extends Component
  */
 const View = ({ data, tocEntries }) => {
+  const tocRef = useRef(); // Ref for the ToC component
+  const spacerRef = useRef(); // Ref for the spacer div
   //get relative offsetTop of an element
   function getOffsetTop(elem) {
     let offsetTop = 0;
@@ -76,13 +78,15 @@ const View = ({ data, tocEntries }) => {
   }
 
   useEffect(() => {
+    const toc = tocRef.current; // ToC element
+    const spacer = spacerRef.current; // Spacer div element
     if (data.sticky) {
-      const toc = document.querySelector('.accordionMenu');
-      const parent = toc.parentElement;
+      // const parent = toc.parentElement;
       const tocOffsetTop = toc ? getOffsetTop(toc) : 0;
 
-      const updateTocWidth = () => {
+      const updateTocWidthAndSpacer = () => {
         if (toc.classList.contains('sticky-toc')) {
+          // Update the ToC width
           const parentStyle = window.getComputedStyle(toc.parentElement);
           const parentPaddingLeft = parseFloat(parentStyle.paddingLeft);
           const parentPaddingRight = parseFloat(parentStyle.paddingRight);
@@ -92,28 +96,36 @@ const View = ({ data, tocEntries }) => {
             parentPaddingRight +
             'px';
           toc.style.width = parentWidth;
+
+          // Set the spacer height to fill the space when ToC is sticky
+          spacer.style.height = `${toc.offsetHeight}px`;
+        } else {
+          spacer.style.height = '0px'; // Collapse the spacer when ToC is not sticky
         }
       };
 
       const handleScroll = () => {
         let scrollPos = window.scrollY;
-        if (scrollPos > tocOffsetTop && toc) {
-          updateTocWidth();
+        if (scrollPos > tocOffsetTop) {
           toc.classList.add('sticky-toc');
-          if (!parent.className.includes('column')) {
-            toc.classList.add('not-column');
-          }
-        } else if (scrollPos <= tocOffsetTop && toc) {
+        } else {
           toc.classList.remove('sticky-toc');
         }
+        updateTocWidthAndSpacer(); // Update width and spacer on scroll
       };
 
       window.addEventListener('scroll', handleScroll);
-      window.addEventListener('resize', updateTocWidth);
+      window.addEventListener('resize', updateTocWidthAndSpacer); // Update width and spacer on resize
+
+      // Initially set spacer height if ToC is already sticky
+      if (window.scrollY > tocOffsetTop) {
+        toc.classList.add('sticky-toc');
+        spacer.style.height = `${toc.offsetHeight}px`;
+      }
 
       return () => {
         window.removeEventListener('scroll', handleScroll);
-        window.removeEventListener('resize', updateTocWidth);
+        window.removeEventListener('resize', updateTocWidthAndSpacer);
       };
     }
   }, [data.sticky]);
@@ -130,7 +142,10 @@ const View = ({ data, tocEntries }) => {
           )}
         </h2>
       )}
-      <RenderAccordionItems items={tocEntries} data={data} />
+      <div ref={spacerRef} /> {/* Spacer div */}
+      <div ref={tocRef} className="accordionMenu">
+        <RenderAccordionItems items={tocEntries} data={data} />
+      </div>
     </>
   );
 };
