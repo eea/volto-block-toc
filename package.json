@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-block-toc",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "volto-block-toc: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
@@ -13,15 +13,12 @@
     "plone",
     "react"
   ],
-  "addons": [
-    "@eeacms/volto-anchors"
-  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:eea/volto-block-toc.git"
   },
   "dependencies": {
-    "@eeacms/volto-anchors": "*",
+    "github-slugger": "1.4.0",
     "smoothscroll-polyfill": "^0.4.4"
   },
   "devDependencies": {
@@ -29,6 +26,7 @@
     "@plone/scripts": "*",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "cypress-fail-fast": "^5.0.1",
+    "dotenv": "^16.3.2",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "md5": "^2.3.0"
