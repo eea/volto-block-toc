@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { Accordion, Icon } from 'semantic-ui-react';
 import Slugger from 'github-slugger';
@@ -21,7 +21,7 @@ const RenderMenuItems = ({ items }) => {
               <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
             </div>
             {subItems && subItems.length > 0 && (
-              <RenderAccordionItems items={subItems} />
+              <RenderMenuItems items={subItems} />
             )}
           </React.Fragment>
         );
