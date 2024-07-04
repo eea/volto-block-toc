@@ -38,9 +38,6 @@ const View = (props) => {
   const offset = 120; // minimum distance from fotter
 
   useEffect(() => {
-    const sideMenu = document.querySelector('.tocSideMenu');
-    const footer = document.querySelector('footer');
-
     if (props.device === 'mobile') {
       sideMenu.style.position = '';
       sideMenu.style.right = '';
@@ -54,38 +51,42 @@ const View = (props) => {
       return;
     }
 
+    const sideMenu = document.querySelector('.tocSideMenu');
+    const footer = document.querySelector('footer');
+    const pageDocument = document.getElementById('page-document');
+
     function adjustSideMenuPosition() {
-      const footerRect = footer.getBoundingClientRect();
-      const sideMenuRect = sideMenu?.getBoundingClientRect();
-      const pageDocumentRect = document
-        .getElementById('page-document')
-        .getBoundingClientRect();
-      sideMenu.style.position = 'absolute';
-      sideMenu.style.right = 100 + 'px';
-      sideMenu.style.top =
-        Math.max(
-          window.scrollY + pageDocumentRect.top - 20,
-          window.scrollY + 20,
-        ) + 'px';
-
-      const distanceToFooter =
-        footerRect.top - sideMenu?.getBoundingClientRect().bottom;
-
-      //menu is too close from footer
-      if (distanceToFooter <= offset) {
-        const newTop = Math.max(
-          window.scrollY + pageDocumentRect.top - 50,
-          window.scrollY + footerRect.top - sideMenuRect.height - offset,
-        );
+      if (sideMenu && footer && pageDocument) {
+        const footerRect = footer.getBoundingClientRect();
+        const sideMenuRect = sideMenu.getBoundingClientRect();
+        const pageDocumentRect = pageDocument.getBoundingClientRect();
         sideMenu.style.position = 'absolute';
-        sideMenu.style.top = `${newTop}px`;
-      } else {
-        //calculate position based on the scroll and start of the page
+        sideMenu.style.right = 100 + 'px';
         sideMenu.style.top =
           Math.max(
             window.scrollY + pageDocumentRect.top - 20,
             window.scrollY + 20,
           ) + 'px';
+
+        const distanceToFooter =
+          footerRect.top - sideMenu?.getBoundingClientRect().bottom;
+
+        //menu is too close from footer
+        if (distanceToFooter <= offset) {
+          const newTop = Math.max(
+            window.scrollY + pageDocumentRect.top - 50,
+            window.scrollY + footerRect.top - sideMenuRect.height - offset,
+          );
+          sideMenu.style.position = 'absolute';
+          sideMenu.style.top = `${newTop}px`;
+        } else {
+          //calculate position based on the scroll and start of the page
+          sideMenu.style.top =
+            Math.max(
+              window.scrollY + pageDocumentRect.top - 20,
+              window.scrollY + 20,
+            ) + 'px';
+        }
       }
     }
 
