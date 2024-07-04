@@ -4,9 +4,10 @@
 @darkTextColor: #3d5265;
 
 .tocSideMenu {
-  background-color: transparent !important;
-  margin-bottom: 30px;
   width: 300px;
+  margin-bottom: 30px;
+  background-color: transparent !important;
+
   .icon {
     font-size: 1.4rem !important;
   }
@@ -14,32 +15,37 @@
   .title {
     border-bottom: 2px solid @darkTextColor !important;
     background-color: transparent !important;
+
     a {
       color: @darkTextColor;
       font-weight: bold;
     }
   }
+
   a:focus {
     color: @secondaryColor !important;
     font-weight: bold;
   }
+
   .title:hover {
     a {
       color: @secondaryColor !important;
       font-weight: bold;
     }
+
     .icon {
       color: @secondaryColor !important;
       font-weight: bold;
     }
+
     .menuTitle {
       color: @darkTextColor;
     }
   }
 
   .content {
-    background-color: transparent !important;
     padding: 0 !important;
+    background-color: transparent !important;
   }
 
   .accordion.ui.fluid {
@@ -47,9 +53,10 @@
     margin-top: 0;
     background-color: transparent !important;
   }
+
   .menuTitle {
-    font-weight: bold;
     font-size: 1.2rem;
+    font-weight: bold;
   }
 }
 
