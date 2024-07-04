@@ -1,5 +1,6 @@
-const TableOfContentsSchema = ({ data, contentType }) => {
-  const { variation } = data;
+const TableOfContentsSchema = ({ data }) => {
+  const { variation = 'default' } = data;
+
   return {
     title: 'Table of Contents',
     fieldsets: [
