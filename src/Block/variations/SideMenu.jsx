@@ -38,6 +38,13 @@ const View = (props) => {
   const offset = 120; // minimum distance from fotter
 
   useEffect(() => {
+    if (!rendered) {
+      setRendered(true);
+      return;
+    }
+
+    const sideMenu = document.querySelector('.tocSideMenu');
+
     if (props.device === 'mobile') {
       sideMenu.style.position = '';
       sideMenu.style.right = '';
@@ -46,12 +53,6 @@ const View = (props) => {
     }
     if (mode === 'edit') return;
 
-    if (!rendered) {
-      setRendered(true);
-      return;
-    }
-
-    const sideMenu = document.querySelector('.tocSideMenu');
     const footer = document.querySelector('footer');
     const pageDocument = document.getElementById('page-document');
 
