@@ -14,7 +14,7 @@ import {
   getBlocksFieldname,
   getBlocksLayoutFieldname,
 } from '@plone/volto/helpers';
-import withDeviceSize from '../hocs/withDeviceSize';
+import withDeviceSize from '@eeacms/volto-block-toc/hocs/withDeviceSize';
 
 export const getBlocksTocEntries = (properties, tocData) => {
   const blocksFieldName = getBlocksFieldname(properties);
