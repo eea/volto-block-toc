@@ -14,6 +14,7 @@ import {
   getBlocksFieldname,
   getBlocksLayoutFieldname,
 } from '@plone/volto/helpers';
+import withDeviceSize from '../hocs/withDeviceSize';
 
 export const getBlocksTocEntries = (properties, tocData) => {
   const blocksFieldName = getBlocksFieldname(properties);
@@ -132,7 +133,7 @@ const View = (props) => {
   const Renderer = variation?.view;
 
   return (
-    <div className={cx('table-of-contents', variation?.id)}>
+    <div className={cx('table-of-contents', variation?.id, props.device)}>
       {props.mode === 'edit' && !data.title && !tocEntries.length && (
         <Message>Table of content</Message>
       )}
@@ -155,4 +156,4 @@ View.propTypes = {
   properties: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default injectIntl(withBlockExtensions(View));
+export default injectIntl(withBlockExtensions(withDeviceSize(View)));
