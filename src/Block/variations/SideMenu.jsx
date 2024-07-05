@@ -35,7 +35,7 @@ const View = (props) => {
   const [open, setOpen] = useState(true);
   const [rendered, setRendered] = useState(false);
 
-  const offset = 120; // minimum distance from fotter
+  const offset = 120; //minimum distance from footer
 
   useEffect(() => {
     if (!rendered) {
