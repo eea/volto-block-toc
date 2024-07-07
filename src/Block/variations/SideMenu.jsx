@@ -45,9 +45,6 @@ const View = (props) => {
     const sideMenu = document.querySelector('.tocSideMenu');
 
     if (props.device === 'mobile') {
-      sideMenu.style.position = '';
-      sideMenu.style.right = '';
-      sideMenu.style.top = '';
       return;
     }
     if (mode === 'edit') return;
