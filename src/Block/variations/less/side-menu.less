@@ -4,6 +4,8 @@
 @darkTextColor: #3d5265;
 
 .tocSideMenu {
+  position: fixed;
+  right: 100px;
   width: 300px;
   margin-bottom: 30px;
   background-color: transparent !important;
@@ -64,9 +66,14 @@
 #page-add {
   .tocSideMenu {
     width: 100% !important;
+    position: unset;
+    right: unset;
   }
 }
 
 .tocSideMenu.mobile {
   width: 100% !important;
+  position: unset;
+  right: unset;
+  position: unset;
 }
