@@ -33,6 +33,7 @@ const View = (props) => {
   const { data, tocEntries, mode } = props;
   const [open, setOpen] = useState(true);
   const [rendered, setRendered] = useState(false);
+  const [isSideBarFixed, setIsSideBarFixed] = useState(false);
 
   const offset = 50; // minimum distance from footer
 
@@ -59,17 +60,18 @@ const View = (props) => {
 
         const distanceToFooter =
           footerRect.top - (window.scrollY + sideMenuRect.height);
-
-        if (distanceToFooter <= offset) {
+        console.log(distanceToFooter, isSideBarFixed);
+        if (distanceToFooter <= offset && isSideBarFixed == false) {
           const newTop =
             window.scrollY + footerRect.top - sideMenuRect.height - offset;
-
           sideMenu.style.position = 'absolute';
           sideMenu.style.top = `${newTop}px`;
-        } else {
-          //calculate position based on the scroll and start of the page
+          setIsSideBarFixed(true);
+        } else if (distanceToFooter > offset && isSideBarFixed === true) {
+          console.log('intru iar');
           sideMenu.style.position = 'fixed';
           sideMenu.style.top = 'unset';
+          setIsSideBarFixed(false);
         }
       }
     }
@@ -83,7 +85,7 @@ const View = (props) => {
         debounce(adjustSideMenuPosition, 250),
       );
     };
-  }, [rendered, mode, open, data.variation, props.device]);
+  }, [rendered, mode, open, data.variation, props.device, isSideBarFixed]);
 
   if (!tocEntries?.length) return null;
 
