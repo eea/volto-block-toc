@@ -5,8 +5,10 @@ import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { Accordion, Icon } from 'semantic-ui-react';
 import Slugger from 'github-slugger';
 import { normalizeString } from './helpers';
-import { debounce } from 'lodash';
 import './less/side-menu.less';
+
+import { BodyClass } from '@plone/volto/helpers';
+import { usePrevious } from '@plone/volto/helpers';
 
 const RenderMenuItems = ({ items }) => (
   <Accordion fluid styled>
@@ -29,76 +31,49 @@ const RenderMenuItems = ({ items }) => (
   </Accordion>
 );
 
-const View = (props) => {
-  const { data, tocEntries, mode } = props;
+const renderTocEntries = (tocEntries, title) => {
   const [open, setOpen] = useState(true);
-  const [rendered, setRendered] = useState(false);
-  const [isSideBarFixed, setIsSideBarFixed] = useState(false);
-
-  const offset = 50; // minimum distance from footer
-
-  useEffect(() => {
-    if (!rendered) {
-      setRendered(true);
-      return;
-    }
-
-    const sideMenu = document.querySelector('.tocSideMenu');
-
-    if (props.device === 'mobile') {
-      return;
-    }
-    if (mode === 'edit') return;
-
-    const footer = document.querySelector('footer');
-    const pageDocument = document.getElementById('page-document');
-
-    function adjustSideMenuPosition() {
-      if (sideMenu && footer && pageDocument) {
-        const footerRect = footer.getBoundingClientRect();
-        const sideMenuRect = sideMenu.getBoundingClientRect();
-
-        const distanceToFooter =
-          footerRect.top - (window.scrollY + sideMenuRect.height);
-        console.log(distanceToFooter, isSideBarFixed);
-        if (distanceToFooter <= offset && isSideBarFixed == false) {
-          const newTop =
-            window.scrollY + footerRect.top - sideMenuRect.height - offset;
-          sideMenu.style.position = 'absolute';
-          sideMenu.style.top = `${newTop}px`;
-          setIsSideBarFixed(true);
-        } else if (distanceToFooter > offset && isSideBarFixed === true) {
-          console.log('intru iar');
-          sideMenu.style.position = 'fixed';
-          sideMenu.style.top = 'unset';
-          setIsSideBarFixed(false);
-        }
-      }
-    }
-
-    window.addEventListener('scroll', debounce(adjustSideMenuPosition, 100));
-    adjustSideMenuPosition();
-
-    return () => {
-      window.removeEventListener(
-        'scroll',
-        debounce(adjustSideMenuPosition, 250),
-      );
-    };
-  }, [rendered, mode, open, data.variation, props.device, isSideBarFixed]);
-
-  if (!tocEntries?.length) return null;
-
   return (
     <Accordion fluid styled>
       <Accordion.Title active={open} onClick={() => setOpen(!open)}>
         <Icon name={open ? 'angle up' : 'angle right'} className="menuTitle" />
-        <p className="menuTitle">{data?.title || ''}</p>
+        <p className="menuTitle">{title || ''}</p>
       </Accordion.Title>
       <Accordion.Content active={open}>
         <RenderMenuItems items={tocEntries} />
       </Accordion.Content>
     </Accordion>
+  );
+};
+
+const View = (props) => {
+  const { data, tocEntries, mode } = props;
+  const prevDevice = usePrevious(props.device);
+
+  useEffect(() => {
+    if (!props.device) {
+      return;
+    }
+
+    const tocSideMenu = document.querySelector('.tocSideMenu');
+    const view = document.querySelector('#view');
+    if (prevDevice && prevDevice !== 'mobile' && props.device === 'mobile') {
+      // add tocSideMenu to .eea.header
+      const header = document.querySelector('.eea.header');
+      if (header) {
+        header.appendChild(tocSideMenu);
+      }
+    }
+    if (tocSideMenu && view) {
+      view.appendChild(tocSideMenu);
+    }
+  }, [props.device]);
+
+  return (
+    <>
+      <BodyClass className={'has-side-toc'} />
+      {renderTocEntries(tocEntries, data?.title)}
+    </>
   );
 };
 
