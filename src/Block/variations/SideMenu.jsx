@@ -11,7 +11,7 @@ import { BodyClass } from '@plone/volto/helpers';
 import { usePrevious } from '@plone/volto/helpers';
 
 const RenderMenuItems = ({ items }) => (
-  <Accordion fluid styled>
+  <>
     {items.map((item, index) => {
       const { title, override_toc, plaintext, items: subItems } = item;
       const slug = override_toc
@@ -19,19 +19,19 @@ const RenderMenuItems = ({ items }) => (
         : Slugger.slug(normalizeString(title));
       return (
         <React.Fragment key={index}>
-          <div className="title">
+          <li className="title">
             <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
-          </div>
+          </li>
           {subItems && subItems.length > 0 && (
             <RenderMenuItems items={subItems} />
           )}
         </React.Fragment>
       );
     })}
-  </Accordion>
+    </>
 );
 
-const renderTocEntries = (tocEntries, title) => {
+const RenderTocEntries = ({ tocEntries, title }) => {
   const [open, setOpen] = useState(true);
   return (
     <Accordion fluid styled>
@@ -40,7 +40,11 @@ const renderTocEntries = (tocEntries, title) => {
         <p className="menuTitle">{title || ''}</p>
       </Accordion.Title>
       <Accordion.Content active={open}>
-        <RenderMenuItems items={tocEntries} />
+        <nav className="toc-menu">
+          <ol className="toc-menu-list">
+            <RenderMenuItems items={tocEntries} />
+          </ol>
+        </nav>
       </Accordion.Content>
     </Accordion>
   );
@@ -72,7 +76,7 @@ const View = (props) => {
   return (
     <>
       <BodyClass className={'has-side-toc'} />
-      {renderTocEntries(tocEntries, data?.title)}
+      <RenderTocEntries tocEntries={tocEntries} title={data?.title} />
     </>
   );
 };
