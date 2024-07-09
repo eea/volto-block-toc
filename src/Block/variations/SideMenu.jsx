@@ -28,7 +28,7 @@ const RenderMenuItems = ({ items }) => (
         </React.Fragment>
       );
     })}
-    </>
+  </>
 );
 
 const RenderTocEntries = ({ tocEntries, title }) => {

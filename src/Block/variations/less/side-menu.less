@@ -3,55 +3,56 @@
 @secondaryColor: #007b6c;
 @darkTextColor: #3d5265;
 
-
 .has-side-toc #view {
   display: grid;
-  grid-template-areas: "content toc";
+  grid-template-areas: 'content toc';
 }
 
 .toc-menu-list {
-  list-style: none;
   padding-left: 0;
   margin: 0;
+  list-style: none;
 }
 
 @media screen and (min-width: 980px) {
   .has-side-toc {
     #view {
-      grid-template-rows: auto 1fr;
-      grid-template-columns: 4fr 1fr;
       max-width: 1300px;
       margin: 0 auto;
       gap: 2rem;
+      grid-template-columns: 4fr 1fr;
+      grid-template-rows: auto 1fr;
 
       #page-document {
-        grid-area: content;
         width: auto;
+        grid-area: content;
       }
 
-       > .tocSideMenu {
-        grid-area: toc;
+      > .tocSideMenu {
 
         position: sticky;
         top: 0;
-        height: 50vh;
         right: 1.5rem;
+        height: 50vh;
         margin-bottom: 30px;
+        grid-area: toc;
       }
     }
   }
 }
 
-
 @media screen and (min-width: 768px) and (max-width: 979px) {
   .has-side-toc #view {
-    grid-template-areas: "toc"
-      "content";
+    grid-template-areas:
+      'toc'
+      'content';
   }
 }
+
 .tocSideMenu {
-  grid-area: toc;
   max-width: 300px;
+  grid-area: toc;
+
   .icon {
     font-size: 1.4rem !important;
   }
