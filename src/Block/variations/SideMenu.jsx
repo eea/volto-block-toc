@@ -19,8 +19,10 @@ const RenderMenuItems = ({ items }) => (
         : Slugger.slug(normalizeString(title));
       return (
         <React.Fragment key={index}>
-          <li className='toc-menu-list-item'>
-            <AnchorLink href={`#${slug}`} className="title">{title}</AnchorLink>
+          <li className="toc-menu-list-item">
+            <AnchorLink href={`#${slug}`} className="title">
+              {title}
+            </AnchorLink>
           </li>
           {subItems && subItems.length > 0 && (
             <RenderMenuItems items={subItems} />
@@ -28,7 +30,7 @@ const RenderMenuItems = ({ items }) => (
         </React.Fragment>
       );
     })}
-    </>
+  </>
 );
 
 const RenderTocEntries = ({ tocEntries, title }) => {
