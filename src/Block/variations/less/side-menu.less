@@ -9,6 +9,7 @@
 }
 
 .toc-menu-list {
+  border-top: 2px solid @darkTextColor;
   padding-left: 0;
   margin: 0;
   list-style: none;
@@ -57,13 +58,9 @@
   }
 
   .title {
-    border-bottom: 2px solid @darkTextColor !important;
-    background-color: transparent !important;
-
-    a {
-      color: @darkTextColor;
-      font-weight: bold;
-    }
+    border-bottom: 2px solid @darkTextColor;
+    display: block;
+    font-weight: bold !important;
   }
 
   a:focus {
