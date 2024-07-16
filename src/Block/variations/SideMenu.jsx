@@ -20,7 +20,7 @@ const RenderMenuItems = ({ items }) => (
       return (
         <React.Fragment key={index}>
           <li className="toc-menu-list-item">
-            <AnchorLink href={`#${slug}`} className="title">
+            <AnchorLink href={`#${slug}`} className="toc-menu-list-title">
               {title}
             </AnchorLink>
           </li>

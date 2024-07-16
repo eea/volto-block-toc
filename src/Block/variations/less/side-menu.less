@@ -3,10 +3,6 @@
 @secondaryColor: #007b6c;
 @darkTextColor: #3d5265;
 
-.has-side-toc #view {
-  display: grid;
-  grid-template-areas: 'content toc';
-}
 
 .toc-menu-list {
   padding-left: 0;
@@ -15,39 +11,38 @@
   list-style: none;
 }
 
-@media screen and (min-width: 980px) {
+@media screen and (min-width: 992px) {
   .has-side-toc {
     #view {
       max-width: 1300px;
       margin: 0 auto;
+      display: grid;
+      grid-template-areas: 'content toc';
       gap: 2rem;
       grid-template-columns: 4fr 1fr;
       grid-template-rows: auto 1fr;
 
       #page-document {
-        width: auto;
+        width: auto !important;
+        max-width: 100% !important;
         grid-area: content;
+        overflow: auto;
       }
 
       > .tocSideMenu {
         position: sticky;
         top: 0;
         right: 1.5rem;
-        height: 50vh;
+        height: calc(50vh + 80px);
         margin-bottom: 30px;
         grid-area: toc;
+        min-width: 180px;
       }
     }
   }
 }
 
-@media screen and (min-width: 768px) and (max-width: 979px) {
-  .has-side-toc #view {
-    grid-template-areas:
-      'toc'
-      'content';
-  }
-}
+
 
 .tocSideMenu {
   max-width: 300px;
@@ -57,10 +52,12 @@
     font-size: 1.4rem !important;
   }
 
-  .title {
-    display: block;
+  .toc-menu-list-title {
     border-bottom: 2px solid @darkTextColor;
-    font-weight: bold !important;
+    display: block;
+    color: @darkTextColor;
+    padding: 0.75rem 1rem;
+    font-weight: bold;
   }
 
   a:focus {
@@ -68,14 +65,9 @@
     font-weight: bold;
   }
 
-  .title:hover {
-    a {
-      color: @secondaryColor !important;
-      font-weight: bold;
-    }
-
-    .icon {
-      color: @secondaryColor !important;
+  .toc-menu-list-item:hover {
+    .toc-menu-list-title {
+      color: @secondaryColor;
       font-weight: bold;
     }
 
@@ -85,8 +77,8 @@
   }
 
   .content {
+    --bg-color: transparent;
     padding: 0 !important;
-    background-color: transparent !important;
   }
 
   .accordion.ui.fluid {
@@ -115,4 +107,17 @@
   top: unset!;
   right: unset;
   width: 100% !important;
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .has-side-toc #view {
+    grid-template-areas:
+      'toc'
+      'content';
+  }
+  .tocSideMenu {
+    max-width: 100%;
+    width: 724px;
+    margin: 0 auto;
+  }
 }
