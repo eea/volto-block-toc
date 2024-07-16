@@ -3,7 +3,6 @@
 @secondaryColor: #007b6c;
 @darkTextColor: #3d5265;
 
-
 .toc-menu-list {
   padding-left: 0;
   border-top: 2px solid @darkTextColor;
@@ -14,35 +13,33 @@
 @media screen and (min-width: 992px) {
   .has-side-toc {
     #view {
+      display: grid;
       max-width: 1300px;
       margin: 0 auto;
-      display: grid;
-      grid-template-areas: 'content toc';
       gap: 2rem;
+      grid-template-areas: 'content toc';
       grid-template-columns: 4fr 1fr;
       grid-template-rows: auto 1fr;
 
       #page-document {
+        overflow: auto;
         width: auto !important;
         max-width: 100% !important;
         grid-area: content;
-        overflow: auto;
       }
 
       > .tocSideMenu {
         position: sticky;
         top: 0;
         right: 1.5rem;
+        min-width: 180px;
         height: calc(50vh + 80px);
         margin-bottom: 30px;
         grid-area: toc;
-        min-width: 180px;
       }
     }
   }
 }
-
-
 
 .tocSideMenu {
   max-width: 300px;
@@ -53,10 +50,10 @@
   }
 
   .toc-menu-list-title {
-    border-bottom: 2px solid @darkTextColor;
     display: block;
-    color: @darkTextColor;
     padding: 0.75rem 1rem;
+    border-bottom: 2px solid @darkTextColor;
+    color: @darkTextColor;
     font-weight: bold;
   }
 
@@ -115,9 +112,10 @@
       'toc'
       'content';
   }
+
   .tocSideMenu {
-    max-width: 100%;
     width: 724px;
+    max-width: 100%;
     margin: 0 auto;
   }
 }
