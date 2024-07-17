@@ -63,6 +63,7 @@ const View = (props) => {
 
     const tocSideMenu = document.querySelector('.tocSideMenu');
     const view = document.querySelector('#view');
+    const pageDocument = document.querySelector('#page-document');
     if (prevDevice && prevDevice !== 'mobile' && props.device === 'mobile') {
       // add tocSideMenu to .eea.header
       const header = document.querySelector('.eea.header');
@@ -70,7 +71,7 @@ const View = (props) => {
         header.appendChild(tocSideMenu);
       }
     }
-    if (tocSideMenu && view) {
+    if (tocSideMenu && view && pageDocument) {
       view.appendChild(tocSideMenu);
     }
   }, [props.device]);
