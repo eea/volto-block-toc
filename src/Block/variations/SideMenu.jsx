@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
@@ -8,7 +8,7 @@ import { normalizeString } from './helpers';
 import './less/side-menu.less';
 
 import { BodyClass } from '@plone/volto/helpers';
-import { usePrevious } from '@plone/volto/helpers';
+import { Portal } from 'react-portal';
 
 const RenderMenuItems = ({ items }) => (
   <>
@@ -54,32 +54,24 @@ const RenderTocEntries = ({ tocEntries, title }) => {
 
 const View = (props) => {
   const { data, tocEntries, mode } = props;
-  const prevDevice = usePrevious(props.device);
-
-  useEffect(() => {
-    if (!props.device) {
-      return;
-    }
-
-    const tocSideMenu = document.querySelector('.tocSideMenu');
-    const view = document.querySelector('#view');
-    const pageDocument = document.querySelector('#page-document');
-    if (prevDevice && prevDevice !== 'mobile' && props.device === 'mobile') {
-      // add tocSideMenu to .eea.header
-      const header = document.querySelector('.eea.header');
-      if (header) {
-        header.appendChild(tocSideMenu);
-      }
-    }
-    if (tocSideMenu && view && pageDocument) {
-      view.appendChild(tocSideMenu);
-    }
-  }, [props.device]);
+  let parentSelector = '#view';
+  // if (props.device === 'mobile') {
+  //   parentSelector = '.eea.header';
+  // }
+  const cloneToc = props.device === 'large' || props.device === 'mobile';
 
   return (
     <>
       <BodyClass className={'has-side-toc'} />
       <RenderTocEntries tocEntries={tocEntries} title={data?.title} />
+
+      {tocEntries && !mode && cloneToc && (
+        <Portal node={__CLIENT__ && document.querySelector(parentSelector)}>
+          <div className={`table-of-contents tocSideMenu ${props.device}`}>
+            <RenderTocEntries tocEntries={tocEntries} title={data?.title} />
+          </div>
+        </Portal>
+      )}
     </>
   );
 };

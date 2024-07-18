@@ -12,13 +12,16 @@
 
 @media screen and (min-width: 992px) {
   #main > #page-header:empty + .breadcrumbs {
-    position: absolute !important;
-    top: 400px;
+    display: none;
   }
 
   #page-header:empty + .breadcrumbs + .content-area {
     padding-top: 0 !important;
     margin-top: 0 !important;
+  }
+
+  #page-document .tocSideMenu {
+    display: none;
   }
 
   #page-document:has(.banner > .image) .tocSideMenu + * {
