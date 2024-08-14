@@ -6,7 +6,7 @@ import { Accordion, Icon } from 'semantic-ui-react';
 import Slugger from 'github-slugger';
 import { normalizeString } from './helpers';
 import './less/side-menu.less';
-
+import { useFirstVisited } from '@eeacms/volto-block-toc/hooks';
 import { BodyClass } from '@plone/volto/helpers';
 import { Portal } from 'react-portal';
 
@@ -38,8 +38,8 @@ const RenderTocEntries = ({ tocEntries, title }) => {
   return (
     <Accordion fluid styled>
       <Accordion.Title active={open} onClick={() => setOpen(!open)}>
-        <Icon name={open ? 'angle up' : 'angle right'} className="menuTitle" />
         <p className="menuTitle">{title || ''}</p>
+        <Icon name={open ? 'angle up' : 'angle right'} className="menuTitle" />
       </Accordion.Title>
       <Accordion.Content active={open}>
         <nav className="toc-menu">
@@ -52,25 +52,52 @@ const RenderTocEntries = ({ tocEntries, title }) => {
   );
 };
 
-const View = (props) => {
-  const { data, tocEntries, mode } = props;
-  let parentSelector = '#view';
-  // if (props.device === 'mobile') {
-  //   parentSelector = '.eea.header';
-  // }
-  const cloneToc = props.device === 'large' || props.device === 'mobile';
+function IsomorphicPortal({ children, target }) {
+  const [isClient, setIsClient] = React.useState();
+  React.useEffect(() => setIsClient(true), []);
 
+  return isClient ? (
+    <Portal node={document.querySelector(target)}>{children}</Portal>
+  ) : (
+    children
+  );
+}
+
+const View = (props) => {
+  const visible = useFirstVisited('.eea.header');
+  const { data, tocEntries, mode } = props;
+
+  React.useEffect(() => {
+    const sideNav = document?.querySelector(
+      '.eea.header .table-of-contents.tocSideMenu.mobile',
+    );
+    if (sideNav) {
+      if (!visible) sideNav.classList.add('fixed');
+      else sideNav.classList.remove('fixed');
+    }
+  }, [visible]);
+
+  // React.useEffect(() => {
+  //   if (!props.mode) {
+  //     const element = document.querySelector(
+  //       '#page-document .table-of-contents.tocSideMenu',
+  //     );
+  //     element?.remove();
+  //   }
+  // }, []);
   return (
     <>
       <BodyClass className={'has-side-toc'} />
-      <RenderTocEntries tocEntries={tocEntries} title={data?.title} />
-
-      {tocEntries && !mode && cloneToc && (
-        <Portal node={__CLIENT__ && document.querySelector(parentSelector)}>
+      {mode === 'edit' ? (
+        <RenderTocEntries tocEntries={tocEntries} title={data?.title} />
+      ) : (
+        <IsomorphicPortal
+          target={props.device === 'mobile' ? '.eea.header' : '#view'}
+        >
           <div className={`table-of-contents tocSideMenu ${props.device}`}>
             <RenderTocEntries tocEntries={tocEntries} title={data?.title} />
           </div>
-        </Portal>
+        </IsomorphicPortal>
       )}
     </>
   );

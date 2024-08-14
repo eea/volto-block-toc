@@ -68,8 +68,18 @@
 }
 
 .tocSideMenu {
-  max-width: 300px;
   grid-area: toc;
+
+  &:not(.mobile) {
+    max-width: 300px;
+  }
+
+  &.mobile.fixed {
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+  }
 
   .icon {
     font-size: 1.4rem !important;
@@ -123,13 +133,6 @@
     right: unset;
     width: 100% !important;
   }
-}
-
-.tocSideMenu.mobile {
-  position: unset;
-  top: unset !;
-  right: unset;
-  width: 100% !important;
 }
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
