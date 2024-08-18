@@ -69,7 +69,7 @@ const View = (props) => {
 
   React.useEffect(() => {
     const sideNav = document?.querySelector(
-      '.eea.header .table-of-contents.tocSideMenu.mobile',
+      '.eea.header .table-of-contents.eea-side-menu.mobile',
     );
     if (sideNav) {
       if (!visible) sideNav.classList.add('fixed');
@@ -80,7 +80,7 @@ const View = (props) => {
   // React.useEffect(() => {
   //   if (!props.mode) {
   //     const element = document.querySelector(
-  //       '#page-document .table-of-contents.tocSideMenu',
+  //       '#page-document .table-of-contents.eea-side-menu',
   //     );
   //     element?.remove();
   //   }
@@ -94,7 +94,7 @@ const View = (props) => {
         <IsomorphicPortal
           target={props.device === 'mobile' ? '.eea.header' : '#view'}
         >
-          <div className={`table-of-contents tocSideMenu ${props.device}`}>
+          <div className={`table-of-contents eea-side-menu ${props.device}`}>
             <RenderTocEntries tocEntries={tocEntries} title={data?.title} />
           </div>
         </IsomorphicPortal>

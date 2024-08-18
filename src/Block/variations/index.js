@@ -21,7 +21,7 @@ const ToCVariations = [
     view: AccordionMenu,
   },
   {
-    id: 'tocSideMenu',
+    id: 'eea-side-menu',
     title: 'Side Menu',
     view: SideMenu,
   },

@@ -24,7 +24,7 @@ function useFirstVisited(query, rootMargin = '0px') {
       }
       observer.disconnect();
     };
-  }, [target]);
+  }, [target, rootMargin, intersected]);
   return intersected;
 }
 
