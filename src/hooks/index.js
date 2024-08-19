@@ -1,7 +1,7 @@
 import React from 'react';
 
 function useFirstVisited(query, rootMargin = '0px') {
-  const target = document.querySelector(query);
+  const target = __CLIENT__ ? document.querySelector(query) : '';
   const [intersected, setIntersected] = React.useState(false);
   React.useEffect(() => {
     if (intersected) return;
@@ -24,7 +24,7 @@ function useFirstVisited(query, rootMargin = '0px') {
       }
       observer.disconnect();
     };
-  }, [target, rootMargin, intersected]);
+  }, [target]);
   return intersected;
 }
 
