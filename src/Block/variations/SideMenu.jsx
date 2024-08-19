@@ -32,8 +32,8 @@ const RenderMenuItems = ({ items }) => (
   </>
 );
 
-const RenderTocEntries = ({ tocEntries, title }) => {
-  const [open, setOpen] = useState(true);
+const RenderTocEntries = ({ tocEntries, title, mobile }) => {
+  const [open, setOpen] = useState(!mobile);
   return (
     <Accordion fluid styled>
       <Accordion.Title active={open} onClick={() => setOpen(!open)}>
@@ -52,9 +52,15 @@ const RenderTocEntries = ({ tocEntries, title }) => {
 };
 
 const View = (props) => {
-  const { data, tocEntries } = props;
+  const { data, tocEntries, device } = props;
 
-  return <RenderTocEntries tocEntries={tocEntries} title={data?.title} />;
+  return (
+    <RenderTocEntries
+      mobile={device === 'mobile'}
+      tocEntries={tocEntries}
+      title={data?.title}
+    />
+  );
 };
 
 View.propTypes = {
