@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
+import Slugger from 'github-slugger';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { Accordion, Icon } from 'semantic-ui-react';
-import Slugger from 'github-slugger';
+
+import withEEASideMenu from '@eeacms/volto-block-toc/hocs/withEEASideMenu';
 import { normalizeString } from './helpers';
 import './less/side-menu.less';
-import { useFirstVisited } from '@eeacms/volto-block-toc/hooks';
-import { BodyClass } from '@plone/volto/helpers';
-import { Portal } from 'react-portal';
 
 const RenderMenuItems = ({ items }) => (
   <>
@@ -52,55 +51,10 @@ const RenderTocEntries = ({ tocEntries, title }) => {
   );
 };
 
-function IsomorphicPortal({ children, target }) {
-  const [isClient, setIsClient] = React.useState();
-  React.useEffect(() => setIsClient(true), []);
-
-  return isClient ? (
-    <Portal node={document.querySelector(target)}>{children}</Portal>
-  ) : (
-    children
-  );
-}
-
 const View = (props) => {
-  const visible = useFirstVisited('.eea.header');
-  const { data, tocEntries, mode } = props;
+  const { data, tocEntries } = props;
 
-  React.useEffect(() => {
-    const sideNav = document?.querySelector(
-      '.eea.header .table-of-contents.eea-side-menu.mobile',
-    );
-    if (sideNav) {
-      if (!visible) sideNav.classList.add('fixed');
-      else sideNav.classList.remove('fixed');
-    }
-  }, [visible]);
-
-  // React.useEffect(() => {
-  //   if (!props.mode) {
-  //     const element = document.querySelector(
-  //       '#page-document .table-of-contents.eea-side-menu',
-  //     );
-  //     element?.remove();
-  //   }
-  // }, []);
-  return (
-    <>
-      <BodyClass className={'has-side-toc'} />
-      {mode === 'edit' ? (
-        <RenderTocEntries tocEntries={tocEntries} title={data?.title} />
-      ) : (
-        <IsomorphicPortal
-          target={props.device === 'mobile' ? '.eea.header' : '#view'}
-        >
-          <div className={`table-of-contents eea-side-menu ${props.device}`}>
-            <RenderTocEntries tocEntries={tocEntries} title={data?.title} />
-          </div>
-        </IsomorphicPortal>
-      )}
-    </>
-  );
+  return <RenderTocEntries tocEntries={tocEntries} title={data?.title} />;
 };
 
 View.propTypes = {
@@ -109,4 +63,4 @@ View.propTypes = {
   mode: PropTypes.string,
 };
 
-export default injectIntl(View);
+export default injectIntl(withEEASideMenu(View));
