@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import Slugger from 'github-slugger';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
-import { Accordion, Icon } from 'semantic-ui-react';
+import { Icon } from '@plone/volto/components';
+
+import downIcon from '@plone/volto/icons/down-key.svg';
+import upIcon from '@plone/volto/icons/up-key.svg';
 
 import withEEASideMenu from '@eeacms/volto-block-toc/hocs/withEEASideMenu';
 import { normalizeString } from './helpers';
@@ -33,21 +36,26 @@ const RenderMenuItems = ({ items }) => (
 );
 
 const RenderTocEntries = ({ tocEntries, title, defaultOpen }) => {
-  const [open, setOpen] = useState(!defaultOpen);
+  const [isNavOpen, setIsNavOpen] = React.useState(!defaultOpen);
   return (
-    <Accordion fluid styled>
-      <Accordion.Title active={open} onClick={() => setOpen(!open)}>
-        <p className="menuTitle">{title || ''}</p>
-        <Icon name={open ? 'angle up' : 'angle right'} className="menuTitle" />
-      </Accordion.Title>
-      <Accordion.Content active={open}>
-        <nav className="toc-menu">
-          <ol className="toc-menu-list">
-            <RenderMenuItems items={tocEntries} />
-          </ol>
-        </nav>
-      </Accordion.Content>
-    </Accordion>
+    <details open={isNavOpen}>
+      {/* eslint-disable-next-line */}
+      <summary
+        onClick={(e) => {
+          e.preventDefault();
+          setIsNavOpen(!isNavOpen);
+        }}
+        className="context-navigation-header accordion-header"
+      >
+        <span className="menuTitle">{title || ''}</span>
+        <Icon name={isNavOpen ? upIcon : downIcon} size="40px" />
+      </summary>
+      <nav className="toc-menu">
+        <ol className="toc-menu-list">
+          <RenderMenuItems items={tocEntries} />
+        </ol>
+      </nav>
+    </details>
   );
 };
 
