@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
 import Slugger from 'github-slugger';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { Icon } from '@plone/volto/components';
@@ -61,7 +60,6 @@ const RenderTocEntries = ({ tocEntries, title, defaultOpen }) => {
 
 const View = (props) => {
   const { data, tocEntries, device } = props;
-
   return (
     <RenderTocEntries
       defaultOpen={device === 'mobile' || device === 'tablet'}
@@ -77,4 +75,4 @@ View.propTypes = {
   mode: PropTypes.string,
 };
 
-export default injectIntl(withEEASideMenu(View));
+export default withEEASideMenu(View);
