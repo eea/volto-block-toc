@@ -58,11 +58,12 @@
 .eea-side-menu {
   grid-area: nav;
 
-  &:not(.mobile) {
+  &:not(.mobile, .tablet) {
     max-width: 300px;
   }
 
-  &.mobile.fixed {
+  &.mobile.fixed,
+  &.tablet.fixed {
     position: fixed;
     z-index: 1;
     top: 0;
@@ -87,7 +88,6 @@
   }
 
   .eea-side-menu {
-    width: 724px;
     max-width: 100%;
     margin: 0 auto;
   }

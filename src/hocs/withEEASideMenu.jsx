@@ -19,12 +19,12 @@ function IsomorphicPortal({ children, target }) {
 
 const withEEASideMenu = (WrappedComponent) =>
   withDeviceSize((props) => {
-    const { mode } = props;
+    const { mode, device } = props;
     const visible = useFirstVisited('.eea.header');
 
     useEffect(() => {
       const sideNav = document?.querySelector(
-        '.eea.header .eea-side-menu.mobile',
+        `.eea.header .eea-side-menu.${device}`,
       );
       if (sideNav) {
         if (!visible) sideNav.classList.add('fixed');
@@ -39,7 +39,11 @@ const withEEASideMenu = (WrappedComponent) =>
           <WrappedComponent {...props} />
         ) : (
           <IsomorphicPortal
-            target={props.device === 'mobile' ? '.eea.header' : '#view'}
+            target={
+              device === 'mobile' || device === 'tablet'
+                ? '.eea.header'
+                : '#view'
+            }
           >
             <div className={`eea-side-menu ${props.device}`}>
               <WrappedComponent {...props} />
