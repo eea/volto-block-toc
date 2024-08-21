@@ -3,7 +3,7 @@ import { Portal } from 'react-portal';
 
 import { useFirstVisited } from '@eeacms/volto-block-toc/hooks';
 import withDeviceSize from '@eeacms/volto-block-toc/hocs/withDeviceSize';
-import { BodyClass } from '@plone/volto/helpers';
+import { BodyClass, useDetectClickOutside } from '@plone/volto/helpers';
 import './less/side-nav.less';
 
 function IsomorphicPortal({ children, target }) {
@@ -21,6 +21,17 @@ const withEEASideMenu = (WrappedComponent) =>
   withDeviceSize((props) => {
     const { mode, device } = props;
     const visible = useFirstVisited('.eea.header');
+    const [isMenuOpen, setIsMenuOpen] = React.useState(true);
+    const isSmallScreen = device === 'mobile' || device === 'tablet';
+
+    const ClickOutsideListener = () => {
+      setIsMenuOpen(false);
+      setTimeout(() => setIsMenuOpen(true), 0);
+    };
+
+    const ref = useDetectClickOutside({
+      onTriggered: ClickOutsideListener,
+    });
 
     useEffect(() => {
       const sideNav = document?.querySelector(
@@ -38,15 +49,15 @@ const withEEASideMenu = (WrappedComponent) =>
         {mode === 'edit' ? (
           <WrappedComponent {...props} />
         ) : (
-          <IsomorphicPortal
-            target={
-              device === 'mobile' || device === 'tablet'
-                ? '.eea.header'
-                : '#view'
-            }
-          >
-            <div className={`eea-side-menu ${props.device}`}>
-              <WrappedComponent {...props} />
+          <IsomorphicPortal target={isSmallScreen ? '.eea.header' : '#view'}>
+            <div
+              className={`eea-side-menu ${props.device}`}
+              ref={isSmallScreen ? ref : null}
+            >
+              <WrappedComponent
+                isMenuOpenOnOutsideClick={isMenuOpen}
+                {...props}
+              />
             </div>
           </IsomorphicPortal>
         )}

@@ -34,8 +34,18 @@ const RenderMenuItems = ({ items }) => (
   </>
 );
 
-const RenderTocEntries = ({ tocEntries, title, defaultOpen }) => {
+const RenderTocEntries = ({
+  tocEntries,
+  title,
+  defaultOpen,
+  isMenuOpenOnOutsideClick,
+}) => {
   const [isNavOpen, setIsNavOpen] = React.useState(!defaultOpen);
+
+  React.useEffect(() => {
+    if (isMenuOpenOnOutsideClick === false) setIsNavOpen(false);
+  }, [isMenuOpenOnOutsideClick]);
+
   return (
     <details open={isNavOpen}>
       {/* eslint-disable-next-line */}
@@ -59,11 +69,12 @@ const RenderTocEntries = ({ tocEntries, title, defaultOpen }) => {
 };
 
 const View = (props) => {
-  const { data, tocEntries, device } = props;
+  const { data, tocEntries, device, isMenuOpenOnOutsideClick } = props;
   return (
     <RenderTocEntries
       defaultOpen={device === 'mobile' || device === 'tablet'}
       tocEntries={tocEntries}
+      isMenuOpenOnOutsideClick={isMenuOpenOnOutsideClick}
       title={data?.title}
     />
   );
