@@ -41,7 +41,7 @@ const withEEASideMenu = (WrappedComponent) =>
         if (!visible) sideNav.classList.add('fixed');
         else sideNav.classList.remove('fixed');
       }
-    }, [visible]);
+    }, [visible, device]);
 
     return (
       <>

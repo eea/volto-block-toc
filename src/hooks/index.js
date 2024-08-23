@@ -24,6 +24,7 @@ function useFirstVisited(query, rootMargin = '0px') {
       }
       observer.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target]);
   return intersected;
 }
