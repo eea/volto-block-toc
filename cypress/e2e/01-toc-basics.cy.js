@@ -240,8 +240,8 @@ describe('Block Tests: Toc', () => {
     cy.get('a[href="#title-2"]').click();
     cy.get('h2[id="title-1"]').contains('Title 1');
     cy.get('h2[id="title-2"]').contains('Title 2');
-    cy.get('.table-of-contents').get('.active.title').click();
-    cy.get('.table-of-contents');
-    cy.get('.table-of-contents .content').should('have.css', 'display', 'none');
+    cy.get('.eea-side-menu').get('summary').click();
+    cy.get('.eea-side-menu');
+    cy.get('.eea-side-menu details').should('not.have.attr', 'open');
   });
 });
