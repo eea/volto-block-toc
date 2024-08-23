@@ -55,8 +55,10 @@ const RenderTocEntries = ({
           setIsNavOpen(!isNavOpen);
         }}
         onKeyDown={(e) => {
-          e.preventDefault();
-          setIsNavOpen(!isNavOpen);
+          if (e.keyCode === 13 || e.keyCode === 32) {
+            e.preventDefault();
+            setIsNavOpen(!isNavOpen);
+          }
         }}
         className="context-navigation-header accordion-header"
       >
