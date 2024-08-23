@@ -54,6 +54,10 @@ const RenderTocEntries = ({
           e.preventDefault();
           setIsNavOpen(!isNavOpen);
         }}
+        onKeyDown={(e) => {
+          e.preventDefault();
+          setIsNavOpen(!isNavOpen);
+        }}
         className="context-navigation-header accordion-header"
       >
         <span className="menuTitle">{title || ''}</span>
