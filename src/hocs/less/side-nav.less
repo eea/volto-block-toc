@@ -1,0 +1,95 @@
+@media screen and (min-width: 992px) {
+  #main > #page-header:empty + .breadcrumbs {
+    display: none;
+  }
+
+  #page-header:empty + .breadcrumbs + .content-area {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  #page-document .eea-side-menu {
+    display: none;
+  }
+
+  #page-document:has(.banner > .image) .eea-side-menu + * {
+    margin-top: 300px;
+  }
+
+  #page-document .eea.banner {
+    position: absolute;
+    left: 0;
+  }
+
+  #page-document .eea.banner + .documentDescription {
+    margin-top: 200px;
+  }
+
+  .has-side-nav {
+    #view {
+      display: grid;
+      max-width: 1300px;
+      margin: 0 auto;
+      gap: 2rem;
+      grid-template-areas: 'content nav';
+      grid-template-columns: 4fr 1fr;
+      grid-template-rows: auto 1fr;
+
+      #page-document {
+        overflow: auto;
+        width: auto !important;
+        max-width: 100% !important;
+        grid-area: content;
+      }
+
+      > .eea-side-menu {
+        position: sticky;
+        top: 0;
+        right: 1.5rem;
+        min-width: 300px;
+        height: fit-content;
+        margin-bottom: 30px;
+        grid-area: nav;
+      }
+    }
+  }
+}
+
+.eea-side-menu {
+  grid-area: nav;
+
+  &:not(.mobile, .tablet) {
+    max-width: 300px;
+  }
+
+  &.mobile.fixed,
+  &.tablet.fixed {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    width: 100%;
+    background-color: #ffffff;
+  }
+}
+
+#page-edit,
+#page-add {
+  .eea-side-menu {
+    position: unset;
+    right: unset;
+    width: 100% !important;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .has-side-nav #view {
+    grid-template-areas:
+      'nav'
+      'content';
+  }
+
+  .eea-side-menu {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
