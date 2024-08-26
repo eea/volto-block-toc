@@ -1,0 +1,55 @@
+@import (multiple, reference, optional) '../../../../theme.config';
+
+@secondaryColor: #007b6c;
+@darkTextColor: #3d5265;
+
+.eea-side-menu {
+  .icon {
+    font-size: 1.4rem !important;
+  }
+
+  .content {
+    --bg-color: transparent;
+    padding: 0 !important;
+  }
+
+  .accordion.ui.fluid {
+    padding-top: 0;
+    margin-top: 0;
+    background-color: white;
+  }
+
+  .menuTitle {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .toc-menu {
+    background-color: white;
+  }
+
+  .toc-menu-list {
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .toc-menu-list-title {
+    display: block;
+    padding: 0.75rem 1rem;
+    border-bottom: 2px solid @darkTextColor;
+    color: @darkTextColor;
+    font-weight: bold;
+  }
+
+  .toc-menu-list-item:hover {
+    .toc-menu-list-title {
+      color: @secondaryColor;
+      font-weight: bold;
+    }
+
+    .menuTitle {
+      color: @darkTextColor;
+    }
+  }
+}
