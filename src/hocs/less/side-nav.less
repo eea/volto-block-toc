@@ -1,9 +1,9 @@
 @media screen and (min-width: 992px) {
-  #main > #page-header:empty + .breadcrumbs {
+  #main>#page-header:empty+.breadcrumbs {
     display: none;
   }
 
-  #page-header:empty + .breadcrumbs + .content-area {
+  #page-header:empty+.breadcrumbs+.content-area {
     padding-top: 0 !important;
     margin-top: 0 !important;
   }
@@ -12,7 +12,7 @@
     display: none;
   }
 
-  #page-document:has(.banner > .image) .eea-side-menu + * {
+  #page-document:has(.banner > .image) .eea-side-menu+* {
     margin-top: 300px;
   }
 
@@ -21,7 +21,7 @@
     left: 0;
   }
 
-  #page-document .eea.banner + .documentDescription {
+  #page-document .eea.banner+.documentDescription {
     margin-top: 200px;
   }
 
@@ -42,7 +42,7 @@
         grid-area: content;
       }
 
-      > .eea-side-menu {
+      >.eea-side-menu {
         position: sticky;
         top: 0;
         right: 1.5rem;
@@ -57,9 +57,15 @@
 
 .eea-side-menu {
   grid-area: nav;
+  transition: top 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045);
 
   &:not(.mobile, .tablet) {
     max-width: 300px;
+  }
+
+  &.mobile {
+    z-index: 3;
+    width: 100%;
   }
 
   &.mobile.fixed,
@@ -70,6 +76,20 @@
     width: 100%;
     background-color: #ffffff;
   }
+
+}
+
+// hide sidebar on toolbar content the Page teacher
+#toolbar:has(.toolbar-content.show)+#main .eea-side-menu.mobile {
+  display: none;
+}
+
+.has-toolbar-collapsed .eea-side-menu.mobile {
+  top: 20px;
+}
+
+.has-toolbar .eea-side-menu.mobile {
+  top: 100px;
 }
 
 #page-edit,
@@ -92,4 +112,11 @@
     max-width: 100%;
     margin: 0 auto;
   }
+}
+
+
+// hide summary marker from eea-side-menu as we use  our own summary icon
+.eea-side-menu summary::-webkit-details-marker,
+.eea-side-menu summary::marker {
+  display: none;
 }
