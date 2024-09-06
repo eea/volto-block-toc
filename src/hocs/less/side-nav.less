@@ -46,7 +46,7 @@
         position: sticky;
         top: 0;
         right: 1.5rem;
-        min-width: 300px;
+        min-width: 315px;
         height: fit-content;
         margin-bottom: 30px;
         grid-area: nav;
@@ -60,7 +60,7 @@
   transition: top 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045);
 
   &:not(.mobile, .tablet) {
-    max-width: 300px;
+    max-width: 315px;
   }
 
   &.mobile {
@@ -68,13 +68,18 @@
     width: 100%;
   }
 
+  &.mobile,
+  &.tablet {
+    position: absolute;
+    z-index: 1;
+    width: -webkit-fill-available;
+    width: -moz-available;
+  }
+
   &.mobile.fixed,
   &.tablet.fixed {
     position: fixed;
-    z-index: 1;
     top: 0;
-    width: -webkit-fill-available;
-    width: -moz-available;
   }
 }
 
@@ -83,11 +88,11 @@
   display: none;
 }
 
-.has-toolbar-collapsed .eea-side-menu.mobile {
+.has-toolbar-collapsed .eea-side-menu.mobile.fixed {
   top: 20px;
 }
 
-.has-toolbar .eea-side-menu.mobile {
+.has-toolbar .eea-side-menu.mobile.fixed {
   top: 100px;
 }
 
@@ -112,12 +117,6 @@
     margin: 0 auto;
   }
 
-  .eea-side-menu.tablet {
-    position: absolute;
-    z-index: 1;
-    width: -webkit-fill-available;
-    width: -moz-available;
-  }
 }
 
 // hide summary marker from eea-side-menu as we use  our own summary icon
