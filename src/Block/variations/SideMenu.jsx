@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { Icon, MaybeWrap } from '@plone/volto/components';
 import Slugger from 'github-slugger';
+import PropTypes from 'prop-types';
+import React from 'react';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
-import { Icon } from '@plone/volto/components';
 
 import downIcon from '@plone/volto/icons/down-key.svg';
 import upIcon from '@plone/volto/icons/up-key.svg';
@@ -62,13 +62,23 @@ const RenderTocEntries = ({
         }}
         className="context-navigation-header accordion-header"
       >
-        <span className="menuTitle">{title || ''}</span>
-        <Icon name={isNavOpen ? upIcon : downIcon} size="40px" />
+        <MaybeWrap
+          condition={defaultOpen}
+          className="ui container d-flex flex-items-center"
+        >
+          <span className="menuTitle">{title || ''}</span>
+          <Icon name={isNavOpen ? upIcon : downIcon} size="40px" />
+        </MaybeWrap>
       </summary>
       <nav className="toc-menu">
-        <ol className="toc-menu-list">
-          <RenderMenuItems items={tocEntries} />
-        </ol>
+        <MaybeWrap
+          condition={defaultOpen}
+          className="ui container d-flex flex-items-center"
+        >
+          <ol className="toc-menu-list context-navigation-list">
+            <RenderMenuItems items={tocEntries} />
+          </ol>
+        </MaybeWrap>
       </nav>
     </details>
   );
