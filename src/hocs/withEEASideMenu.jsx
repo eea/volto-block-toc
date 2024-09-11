@@ -23,7 +23,7 @@ const withEEASideMenu = (WrappedComponent) =>
       mode,
       device,
       targetParent = '.eea.header',
-      targetParentThreshold = '-100px',
+      targetParentThreshold = '0px',
     } = props;
     const visible = useFirstVisited(targetParent, targetParentThreshold);
     const [isMenuOpen, setIsMenuOpen] = React.useState(true);
