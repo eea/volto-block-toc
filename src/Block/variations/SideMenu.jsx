@@ -41,15 +41,38 @@ const RenderTocEntries = ({
   isMenuOpenOnOutsideClick,
 }) => {
   const [isNavOpen, setIsNavOpen] = React.useState(!defaultOpen);
+  const summaryRef = React.useRef(null);
+  const contentRef = React.useRef(null);
 
   React.useEffect(() => {
     if (isMenuOpenOnOutsideClick === false) setIsNavOpen(false);
   }, [isMenuOpenOnOutsideClick]);
 
+  React.useEffect(() => {
+    if (defaultOpen) {
+      const handleOutsideClick = (event) => {
+        if (
+          summaryRef.current &&
+          contentRef.current &&
+          !summaryRef.current.contains(event.target) &&
+          !contentRef.current.contains(event.target)
+        ) {
+          setIsNavOpen(false);
+        }
+      };
+
+      document.addEventListener('click', handleOutsideClick);
+      return () => {
+        document.removeEventListener('click', handleOutsideClick);
+      };
+    }
+  }, [summaryRef, defaultOpen]);
+
   return (
     <details open={isNavOpen}>
       {/* eslint-disable-next-line */}
       <summary
+        ref={summaryRef}
         onClick={(e) => {
           e.preventDefault();
           setIsNavOpen(!isNavOpen);
@@ -75,7 +98,10 @@ const RenderTocEntries = ({
           condition={defaultOpen}
           className="ui container d-flex flex-items-center"
         >
-          <ol className="toc-menu-list context-navigation-list">
+          <ol
+            className="toc-menu-list context-navigation-list"
+            ref={contentRef}
+          >
             <RenderMenuItems items={tocEntries} />
           </ol>
         </MaybeWrap>
