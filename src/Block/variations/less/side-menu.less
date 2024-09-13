@@ -39,13 +39,17 @@
     padding: 0.75rem 1rem;
     border-bottom: 2px solid @darkTextColor;
     color: @darkTextColor;
-    font-weight: bold;
+    font-weight: 500;
+
+    &.active {
+      color: @secondaryColor;
+    }
   }
 
   .toc-menu-list-item:hover {
     .toc-menu-list-title {
       color: @secondaryColor;
-      font-weight: bold;
+      font-weight: 500;
     }
 
     .menuTitle {

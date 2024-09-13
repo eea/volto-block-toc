@@ -1,8 +1,7 @@
-import { Icon, MaybeWrap } from '@plone/volto/components';
+import { Icon, MaybeWrap, UniversalLink } from '@plone/volto/components';
 import Slugger from 'github-slugger';
 import PropTypes from 'prop-types';
 import React from 'react';
-import AnchorLink from 'react-anchor-link-smooth-scroll';
 
 import downIcon from '@plone/volto/icons/down-key.svg';
 import upIcon from '@plone/volto/icons/up-key.svg';
@@ -18,12 +17,17 @@ const RenderMenuItems = ({ items }) => (
       const slug = override_toc
         ? Slugger.slug(normalizeString(plaintext))
         : Slugger.slug(normalizeString(title));
+      const href = `#${slug}`;
+      const isActive = __CLIENT__ && window.location.hash === href;
       return (
         <React.Fragment key={index}>
           <li className="toc-menu-list-item">
-            <AnchorLink href={`#${slug}`} className="toc-menu-list-title">
+            <UniversalLink
+              href={href}
+              className={`toc-menu-list-title ${isActive ? 'active' : ''}`}
+            >
               {title}
-            </AnchorLink>
+            </UniversalLink>
           </li>
           {subItems && subItems.length > 0 && (
             <RenderMenuItems items={subItems} />
