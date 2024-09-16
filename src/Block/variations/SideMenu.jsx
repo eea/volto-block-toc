@@ -10,7 +10,7 @@ import withEEASideMenu from '@eeacms/volto-block-toc/hocs/withEEASideMenu';
 import { normalizeString } from './helpers';
 import './less/side-menu.less';
 
-const RenderMenuItems = ({ items }) => (
+const RenderMenuItems = ({ items, defaultOpen, setIsNavOpen }) => (
   <>
     {items.map((item, index) => {
       const { title, override_toc, plaintext, items: subItems } = item;
@@ -25,12 +25,17 @@ const RenderMenuItems = ({ items }) => (
             <UniversalLink
               href={href}
               className={`toc-menu-list-title ${isActive ? 'active' : ''}`}
+              onClick={() => defaultOpen && setIsNavOpen(false)}
             >
               {title}
             </UniversalLink>
           </li>
           {subItems && subItems.length > 0 && (
-            <RenderMenuItems items={subItems} />
+            <RenderMenuItems
+              items={subItems}
+              defaultOpen={defaultOpen}
+              setIsNavOpen={setIsNavOpen}
+            />
           )}
         </React.Fragment>
       );
@@ -106,7 +111,11 @@ const RenderTocEntries = ({
             className="toc-menu-list context-navigation-list"
             ref={contentRef}
           >
-            <RenderMenuItems items={tocEntries} />
+            <RenderMenuItems
+              items={tocEntries}
+              defaultOpen={defaultOpen}
+              setIsNavOpen={setIsNavOpen}
+            />
           </ol>
         </MaybeWrap>
       </nav>
