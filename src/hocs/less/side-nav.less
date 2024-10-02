@@ -16,12 +16,12 @@
     margin-top: 300px;
   }
 
-  #page-document .eea.banner {
+  #page-document:has(.eea-side-menu) .eea.banner {
     position: absolute;
     left: 0;
   }
-
-  #page-document .eea.banner + .documentDescription {
+  
+  #page-document .eea-side-menu:not(:empty) + * {
     margin-top: 200px;
   }
 
