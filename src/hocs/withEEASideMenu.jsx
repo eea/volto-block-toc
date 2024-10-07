@@ -23,6 +23,7 @@ const withEEASideMenu = (WrappedComponent) =>
       mode,
       device,
       targetParent = '.eea.header',
+      shouldRender = true,
       targetParentThreshold = '0px',
     } = props;
     const visible = useFirstVisited(targetParent, targetParentThreshold);
@@ -49,24 +50,27 @@ const withEEASideMenu = (WrappedComponent) =>
     }, [visible, targetParent, device]);
 
     return (
-      <>
-        <BodyClass className={'has-side-nav'} />
-        {mode === 'edit' ? (
-          <WrappedComponent {...props} />
-        ) : (
-          <IsomorphicPortal target={isSmallScreen ? targetParent : '#view'}>
-            <div
-              className={`eea-side-menu ${props.device}`}
-              ref={isSmallScreen ? ref : null}
-            >
-              <WrappedComponent
-                isMenuOpenOnOutsideClick={isMenuOpen}
-                {...props}
-              />
-            </div>
-          </IsomorphicPortal>
-        )}
-      </>
+      shouldRender && (
+        <>
+          {' '}
+          <BodyClass className={'has-side-nav'} />
+          {mode === 'edit' ? (
+            <WrappedComponent {...props} />
+          ) : (
+            <IsomorphicPortal target={isSmallScreen ? targetParent : '#view'}>
+              <div
+                className={`eea-side-menu ${props.device}`}
+                ref={isSmallScreen ? ref : null}
+              >
+                <WrappedComponent
+                  isMenuOpenOnOutsideClick={isMenuOpen}
+                  {...props}
+                />
+              </div>
+            </IsomorphicPortal>
+          )}
+        </>
+      )
     );
   });
 
