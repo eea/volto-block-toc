@@ -60,8 +60,8 @@ describe('Block Tests: Toc', () => {
     cy.contains('Volto Toc');
     cy.contains('Title 1');
     cy.contains('Title 2');
-    cy.get('a[href="#title-1"]').click();
-    cy.get('a[href="#title-2"]').click();
+    cy.get('a[href*="#title-1"]').click();
+    cy.get('a[href*="#title-2"]').click();
     cy.get('h2[id="title-1"]').contains('Title 1');
     cy.get('h2[id="title-2"]').contains('Title 2');
   });
@@ -236,8 +236,8 @@ describe('Block Tests: Toc', () => {
     cy.contains('Volto Toc');
     cy.contains('Title 1');
     cy.contains('Title 2');
-    cy.get('a[href="#title-1"]').click();
-    cy.get('a[href="#title-2"]').click();
+    cy.get('a[href*="#title-1"]').click();
+    cy.get('a[href*="#title-2"]').click();
     cy.get('h2[id="title-1"]').contains('Title 1');
     cy.get('h2[id="title-2"]').contains('Title 2');
     cy.get('.eea-side-menu').get('summary').click();
