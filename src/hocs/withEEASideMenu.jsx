@@ -19,8 +19,14 @@ function IsomorphicPortal({ children, target }) {
 
 const withEEASideMenu = (WrappedComponent) =>
   withDeviceSize((props) => {
-    const { mode, device } = props;
-    const visible = useFirstVisited('.eea.header');
+    const {
+      mode,
+      device,
+      targetParent = '.eea.header',
+      shouldRender = true,
+      targetParentThreshold = '0px',
+    } = props;
+    const visible = useFirstVisited(targetParent, targetParentThreshold);
     const [isMenuOpen, setIsMenuOpen] = React.useState(true);
     const isSmallScreen = device === 'mobile' || device === 'tablet';
 
@@ -35,34 +41,44 @@ const withEEASideMenu = (WrappedComponent) =>
 
     useEffect(() => {
       const sideNav = document?.querySelector(
-        `.eea.header .eea-side-menu.${device}`,
+        `${targetParent} .eea-side-menu.${device}`,
       );
       if (sideNav) {
         if (!visible) sideNav.classList.add('fixed');
         else sideNav.classList.remove('fixed');
       }
-    }, [visible, device]);
+    }, [visible, targetParent, device]);
 
     return (
-      <>
-        <BodyClass className={'has-side-nav'} />
-        {mode === 'edit' ? (
-          <WrappedComponent {...props} />
-        ) : (
-          <IsomorphicPortal target={isSmallScreen ? '.eea.header' : '#view'}>
-            <div
-              className={`eea-side-menu ${props.device}`}
-              ref={isSmallScreen ? ref : null}
-            >
-              <WrappedComponent
-                isMenuOpenOnOutsideClick={isMenuOpen}
-                {...props}
-              />
-            </div>
-          </IsomorphicPortal>
-        )}
-      </>
+      shouldRender && (
+        <>
+          {' '}
+          <BodyClass className={'has-side-nav'} />
+          {mode === 'edit' ? (
+            <WrappedComponent {...props} />
+          ) : (
+            <IsomorphicPortal target={isSmallScreen ? targetParent : '#view'}>
+              <div
+                className={`eea-side-menu ${props.device}`}
+                ref={isSmallScreen ? ref : null}
+              >
+                <WrappedComponent
+                  isMenuOpenOnOutsideClick={isMenuOpen}
+                  {...props}
+                />
+              </div>
+            </IsomorphicPortal>
+          )}
+        </>
+      )
     );
   });
+
+/* can be used to override the default targetParent 
+export default compose(
+  (WrappedComponent) => (props) => 
+    withEEASideMenu(WrappedComponent)({ ...props, targetParent: '.your-custom-target', targetParentThreshold: '100px' })
+)(Component);
+*/
 
 export default withEEASideMenu;
