@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 
 import { useFirstVisited } from '@eeacms/volto-block-toc/hooks';
@@ -50,18 +50,22 @@ const withEEASideMenu = (WrappedComponent) =>
       mode,
       device,
       targetParent = '.eea.header',
+      fixedVisibilitySwitchTarget = targetParent,
       insertBeforeOnMobile = null,
       shouldRender = true,
-      targetParentThreshold = '0px',
+      fixedVisibilitySwitchTargetThreshold = '0px',
     } = props;
-    const visible = useFirstVisited(targetParent, targetParentThreshold);
+    const visible = useFirstVisited(
+      fixedVisibilitySwitchTarget,
+      fixedVisibilitySwitchTargetThreshold,
+    );
     const [isMenuOpen, setIsMenuOpen] = React.useState(true);
     const isSmallScreen = device === 'mobile' || device === 'tablet';
 
-    const ClickOutsideListener = () => {
+    const ClickOutsideListener = useCallback(() => {
       setIsMenuOpen(false);
       setTimeout(() => setIsMenuOpen(true), 0);
-    };
+    }, []);
 
     const ref = useDetectClickOutside({
       onTriggered: ClickOutsideListener,
@@ -112,7 +116,7 @@ export default compose(
     targetParent: '.your-custom-target',
     insertBeforeOnMobile: '.banner', // add if you need the WrappedContent to be added before a certain
     element inside the targetParent 
-    targetParentThreshold: '100px' })
+    fixedVisibilitySwitchTargetThreshold: '100px' })
 )(Component);
 */
 

@@ -1,61 +1,3 @@
-@media screen and (min-width: 992px) {
-  #page-header:empty + .breadcrumbs + .content-area {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-  }
-
-  #page-document .eea-side-menu {
-    display: none;
-  }
-
-  #page-document:has(.banner > .image) .eea-side-menu + * {
-    margin-top: 300px;
-  }
-
-  #page-document:has(.eea-side-menu) .eea.banner {
-    position: absolute;
-    left: 0;
-  }
-
-  #page-document .eea-side-menu:not(:empty) + * {
-    margin-top: 200px;
-  }
-
-  .has-side-nav {
-    #view {
-      display: grid;
-      max-width: 1300px;
-      margin: 0 auto;
-      gap: 5rem;
-      grid-template-areas: 'content nav';
-      grid-template-columns: 4fr 1fr;
-      grid-template-rows: auto 1fr;
-
-      #page-document {
-        overflow: auto;
-        width: auto !important;
-        min-width: 100%;
-        max-width: 100% !important;
-        grid-area: content;
-      }
-
-      .ui.grid.column-grid {
-        max-width: 900px;
-      }
-
-      > .eea-side-menu {
-        position: sticky;
-        top: 0;
-        right: 1.5rem;
-        min-width: 315px;
-        height: fit-content;
-        margin-bottom: 30px;
-        grid-area: nav;
-      }
-    }
-  }
-}
-
 .eea-side-menu {
   grid-area: nav;
   transition: top 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045);
@@ -106,7 +48,27 @@
   }
 }
 
+// hide summary marker from eea-side-menu as we use  our own summary icon
+.eea-side-menu summary::-webkit-details-marker,
+.eea-side-menu summary::marker {
+  display: none;
+}
+
+@media screen and (max-width: 767px) {
+  // better centering of the inpage navigation icon
+  #inpage-navigation > div > i.icon,
+  #inpage-navigation i.icons {
+    line-height: 2rem;
+  }
+}
 @media screen and (min-width: 768px) and (max-width: 991px) {
+  .has-side-nav #page-document {
+    padding: 0 1.25rem;
+  }
+
+  .view-viewview.light-header .main.bar {
+    margin-bottom: -115px;
+  }
   .has-side-nav #view {
     grid-template-areas:
       'nav'
@@ -119,8 +81,59 @@
   }
 }
 
-// hide summary marker from eea-side-menu as we use  our own summary icon
-.eea-side-menu summary::-webkit-details-marker,
-.eea-side-menu summary::marker {
-  display: none;
+@media screen and (min-width: 992px) {
+  #page-header:empty + .breadcrumbs + .content-area {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  #page-document .eea-side-menu {
+    display: none;
+  }
+
+  #page-document:has(.banner > .image) .eea-side-menu + * {
+    margin-top: 300px;
+  }
+
+  #page-document:has(.eea-side-menu) .eea.banner {
+    position: absolute;
+    left: 0;
+  }
+
+  #page-document .eea-side-menu:not(:empty) + * {
+    margin-top: 200px;
+  }
+
+  .has-side-nav {
+    #view {
+      display: grid;
+      max-width: 1300px;
+      margin: 0 auto;
+      gap: 5rem;
+      grid-template-areas: 'content nav';
+      grid-template-columns: 4fr 1fr;
+      grid-template-rows: auto 1fr;
+
+      #page-document {
+        width: auto !important;
+        min-width: 100%;
+        max-width: 100% !important;
+        grid-area: content;
+      }
+
+      .ui.grid {
+        max-width: 900px;
+      }
+
+      > .eea-side-menu {
+        position: sticky;
+        top: 0;
+        right: 1.5rem;
+        min-width: 315px;
+        height: fit-content;
+        margin-bottom: 30px;
+        grid-area: nav;
+      }
+    }
+  }
 }
