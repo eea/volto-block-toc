@@ -1,6 +1,5 @@
 .eea-side-menu {
   grid-area: nav;
-  transition: top 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045);
 
   &:not(.mobile, .tablet) {
     max-width: 315px;
@@ -62,14 +61,12 @@
   }
 }
 @media screen and (min-width: 768px) and (max-width: 991px) {
-  .has-side-nav #page-document {
-    padding: 0 1.25rem;
-  }
-
   .view-viewview.light-header .main.bar {
     margin-bottom: -115px;
   }
-
+  .view-viewview.light-header .eea.header:has(#search-box, .visible) .eea-side-menu {
+    z-index: 0;
+  }
   .has-side-nav #view {
     grid-template-areas:
       'nav'
@@ -137,4 +134,10 @@
       }
     }
   }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1365px) {
+   .view-viewview.light-header .ui.container {
+        padding: 0 1.25rem;
+    }
 }
