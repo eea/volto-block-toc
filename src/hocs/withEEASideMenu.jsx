@@ -53,7 +53,8 @@ const withEEASideMenu = (WrappedComponent) =>
       fixedVisibilitySwitchTarget = targetParent,
       insertBeforeOnMobile = null,
       shouldRender = true,
-      fixedVisibilitySwitchTargetThreshold = '0px',
+      targetParentThreshold = '0px',
+      fixedVisibilitySwitchTargetThreshold = targetParentThreshold,
     } = props;
     const visible = useFirstVisited(
       fixedVisibilitySwitchTarget,
@@ -109,14 +110,17 @@ const withEEASideMenu = (WrappedComponent) =>
     );
   });
 
-/* can be used to override the default targetParent 
+/* can be used to override the default targetParent
 export default compose(
-  (WrappedComponent) => (props) => 
-    withEEASideMenu(WrappedComponent)({ ...props, 
+  (WrappedComponent) => (props) =>
+    withEEASideMenu(WrappedComponent)({ ...props,
     targetParent: '.your-custom-target',
+    targetParentThreshold: '100px', // the threshold at which the menu will be visible when targetParent is not visible
     insertBeforeOnMobile: '.banner', // add if you need the WrappedContent to be added before a certain
-    element inside the targetParent 
-    fixedVisibilitySwitchTargetThreshold: '100px' })
+    element inside the targetParent
+    fixedVisibilitySwitchTarget: '.main.bar', // add if you need the menu to be fixed on certain element
+    going out of view
+    fixedVisibilitySwitchTargetThreshold: '100px' // overrides targetParentThreshold })
 )(Component);
 */
 
