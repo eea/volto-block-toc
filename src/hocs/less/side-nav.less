@@ -53,18 +53,7 @@
   display: none;
 }
 
-@media screen and (max-width: 767px) {
-  // better centering of the inpage navigation icon
-  #inpage-navigation > div > i.icon,
-  #inpage-navigation i.icons {
-    line-height: 2rem;
-  }
-}
 @media screen and (min-width: 768px) and (max-width: 991px) {
-  .view-viewview.light-header .main.bar {
-    margin-bottom: -115px;
-  }
-
   .has-side-nav #view {
     grid-template-areas:
       'nav'
@@ -78,11 +67,6 @@
 }
 
 @media screen and (min-width: 992px) {
-  #page-header:empty + .breadcrumbs + .content-area {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-  }
-
   #page-document .eea-side-menu {
     display: none;
   }
@@ -131,11 +115,5 @@
         grid-area: nav;
       }
     }
-  }
-}
-
-@media only screen and (min-width: 768px) and (max-width: 1365px) {
-  .view-viewview.light-header .ui.container {
-    padding: 0 1.25rem;
   }
 }
