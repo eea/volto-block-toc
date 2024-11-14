@@ -6,11 +6,7 @@ export default function withDeviceSize(WrappedComponent) {
 
     const updateScreenSize = () => {
       if (__CLIENT__) {
-        const screenWidth =
-          document.documentElement.clientWidth ||
-          document.body.clientWidth ||
-          window.innerWidth ||
-          0;
+        const screenWidth = window.innerWidth || 0;
 
         setDevice(getDeviceConfig(screenWidth));
       }
