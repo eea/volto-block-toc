@@ -19,6 +19,14 @@ const ToCVariations = [
     id: 'accordionMenu',
     title: 'Accordion Menu',
     view: AccordionMenu,
+    schemaEnhancer: ({ schema }) => {
+      schema.fieldsets[0].fields.push('bulleted_list');
+      schema.properties.bulleted_list = {
+        title: 'Use bullet list',
+        type: 'boolean',
+      };
+      return schema;
+    },
   },
   {
     id: 'eea-side-menu',

@@ -12,52 +12,6 @@ import Slugger from 'github-slugger';
 import { normalizeString } from './helpers';
 import './less/accordion-menu.less';
 
-const RenderAccordionItems = ({ items }) => {
-  const [activeItems, setActiveItems] = useState({});
-
-  const handleClick = (index, hasSubItems) => {
-    if (hasSubItems) {
-      setActiveItems((prevActiveItems) => ({
-        ...prevActiveItems,
-        [index]: !prevActiveItems[index],
-      }));
-    }
-  };
-
-  return (
-    <Accordion fluid styled>
-      {items.map((item, index) => {
-        const { title, override_toc, plaintext, items: subItems } = item;
-        const slug = override_toc
-          ? Slugger.slug(normalizeString(plaintext))
-          : Slugger.slug(normalizeString(title));
-
-        const isActive = !!activeItems[index];
-        const hasSubItems = subItems && subItems.length > 0;
-
-        return (
-          <React.Fragment key={index}>
-            <Accordion.Title
-              active={isActive}
-              onClick={() => handleClick(index, hasSubItems)}
-            >
-              {subItems && subItems.length > 0 && (
-                <Icon name={isActive ? 'angle up' : 'angle right'} />
-              )}
-              <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
-            </Accordion.Title>
-            <Accordion.Content active={isActive}>
-              {subItems && subItems.length > 0 && (
-                <RenderAccordionItems items={subItems} />
-              )}
-            </Accordion.Content>
-          </React.Fragment>
-        );
-      })}
-    </Accordion>
-  );
-};
-
 /**
  * View toc block class.
  * @class View
@@ -66,6 +20,7 @@ const RenderAccordionItems = ({ items }) => {
 const View = ({ data, tocEntries }) => {
   const tocRef = useRef(); // Ref for the ToC component
   const spacerRef = useRef(); // Ref for the spacer div
+  const [activeItems, setActiveItems] = useState({});
   //get relative offsetTop of an element
   function getOffsetTop(elem) {
     let offsetTop = 0;
@@ -130,6 +85,53 @@ const View = ({ data, tocEntries }) => {
     }
   }, [data.sticky]);
 
+  const RenderAccordionItems = ({ item, level }) => {
+    const handleClick = (id, hasSubItems) => {
+      if (hasSubItems) {
+        setActiveItems((prevActiveItems) => ({
+          ...prevActiveItems,
+          [id]: !prevActiveItems[id],
+        }));
+      }
+    };
+
+    const { title, override_toc, plaintext, items: subItems, id } = item;
+    const slug = override_toc
+      ? Slugger.slug(normalizeString(plaintext))
+      : Slugger.slug(normalizeString(title));
+
+    const isActive = !!activeItems[id];
+    const hasSubItems = subItems && subItems.length > 0;
+
+    return (
+      <li key={id}>
+        {hasSubItems ? (
+          <Accordion fluid styled>
+            <Accordion.Title
+              active={isActive}
+              onClick={() => handleClick(id, hasSubItems)}
+            >
+              {subItems && subItems.length > 0 && (
+                <Icon name={isActive ? 'angle up' : 'angle right'} />
+              )}
+
+              <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
+            </Accordion.Title>
+            <Accordion.Content active={isActive}>
+              <ul className="accordion-list">
+                {subItems.map((child) =>
+                  RenderAccordionItems({ item: child, level: level + 1 }),
+                )}
+              </ul>
+            </Accordion.Content>
+          </Accordion>
+        ) : (
+          <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
+        )}
+      </li>
+    );
+  };
+
   return (
     <>
       {data.title && !data.hide_title && (
@@ -144,7 +146,9 @@ const View = ({ data, tocEntries }) => {
       )}
       <div ref={spacerRef} /> {/* Spacer div */}
       <div ref={tocRef} className="accordionMenu">
-        <RenderAccordionItems items={tocEntries} data={data} />
+        <ul style={{ listStyle: 'none' }}>
+          {tocEntries.map((item) => RenderAccordionItems({ item }))}
+        </ul>
       </div>
     </>
   );
