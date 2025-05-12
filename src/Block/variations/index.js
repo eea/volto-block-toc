@@ -24,6 +24,7 @@ const ToCVariations = [
       schema.properties.bulleted_list = {
         title: 'Use bullet list',
         type: 'boolean',
+        description: 'Bullet point for child items',
       };
       return schema;
     },

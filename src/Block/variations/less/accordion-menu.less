@@ -3,23 +3,22 @@
     font-size: 1.2rem !important;
   }
 
+  .accordion-list {
+    list-style: none;
+  }
+
   .content.active {
     padding: 0 !important;
     margin: 0 !important;
+
+    .accordion-list-bulleted {
+      list-style: disc;
+    }
 
     .title {
       padding: 4px !important;
       border: none !important;
       background-color: #f9f9f9 !important;
-
-      li[role='listitem'] {
-        padding: 10px 1.5em !important;
-        font-size: 0.95em;
-      }
-
-      & > a {
-        padding: 10px 30px !important;
-      }
     }
   }
 

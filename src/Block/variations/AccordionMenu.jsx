@@ -5,6 +5,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { Accordion, Icon } from 'semantic-ui-react';
@@ -18,6 +19,7 @@ import './less/accordion-menu.less';
  * @extends Component
  */
 const View = ({ data, tocEntries }) => {
+  const { bulleted_list = false } = data;
   const tocRef = useRef(); // Ref for the ToC component
   const spacerRef = useRef(); // Ref for the spacer div
   const [activeItems, setActiveItems] = useState({});
@@ -105,29 +107,30 @@ const View = ({ data, tocEntries }) => {
 
     return (
       <li key={id}>
-        {hasSubItems ? (
-          <Accordion fluid styled>
-            <Accordion.Title
-              active={isActive}
-              onClick={() => handleClick(id, hasSubItems)}
-            >
-              {subItems && subItems.length > 0 && (
-                <Icon name={isActive ? 'angle up' : 'angle right'} />
-              )}
-
-              <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
-            </Accordion.Title>
+        <Accordion fluid styled>
+          <Accordion.Title
+            active={isActive}
+            onClick={() => handleClick(id, hasSubItems)}
+          >
+            {subItems && subItems.length > 0 && (
+              <Icon name={isActive ? 'angle up' : 'angle right'} />
+            )}
+            <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
+          </Accordion.Title>
+          {hasSubItems && (
             <Accordion.Content active={isActive}>
-              <ul className="accordion-list">
+              <ul
+                className={cx('accordion-list', {
+                  'accordion-list-bulleted': bulleted_list,
+                })}
+              >
                 {subItems.map((child) =>
                   RenderAccordionItems({ item: child, level: level + 1 }),
                 )}
               </ul>
             </Accordion.Content>
-          </Accordion>
-        ) : (
-          <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
-        )}
+          )}
+        </Accordion>
       </li>
     );
   };
@@ -146,7 +149,7 @@ const View = ({ data, tocEntries }) => {
       )}
       <div ref={spacerRef} /> {/* Spacer div */}
       <div ref={tocRef} className="accordionMenu">
-        <ul style={{ listStyle: 'none' }}>
+        <ul className="accordion-list">
           {tocEntries.map((item) => RenderAccordionItems({ item }))}
         </ul>
       </div>
