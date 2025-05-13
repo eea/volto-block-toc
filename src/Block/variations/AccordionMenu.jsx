@@ -10,6 +10,8 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { Accordion, Icon } from 'semantic-ui-react';
 import Slugger from 'github-slugger';
+
+import { MaybeWrap } from '@plone/volto/components';
 import { normalizeString } from './helpers';
 import './less/accordion-menu.less';
 
@@ -87,7 +89,7 @@ const View = ({ data, tocEntries }) => {
     }
   }, [data.sticky]);
 
-  const RenderAccordionItems = ({ item, level }) => {
+  const RenderAccordionItems = ({ item }) => {
     const handleClick = (id, hasSubItems) => {
       if (hasSubItems) {
         setActiveItems((prevActiveItems) => ({
@@ -97,7 +99,7 @@ const View = ({ data, tocEntries }) => {
       }
     };
 
-    const { title, override_toc, plaintext, items: subItems, id } = item;
+    const { title, override_toc, plaintext, items: subItems, id, level } = item;
     const slug = override_toc
       ? Slugger.slug(normalizeString(plaintext))
       : Slugger.slug(normalizeString(title));
@@ -106,7 +108,11 @@ const View = ({ data, tocEntries }) => {
     const hasSubItems = subItems && subItems.length > 0;
 
     return (
-      <li key={id}>
+      <MaybeWrap
+        className={`list-item level-${level}`}
+        condition={!hasSubItems && level > 2}
+        as={(props) => <li key={id} {...props} />}
+      >
         <Accordion fluid styled>
           <Accordion.Title
             active={isActive}
@@ -124,14 +130,12 @@ const View = ({ data, tocEntries }) => {
                   'accordion-list-bulleted': bulleted_list,
                 })}
               >
-                {subItems.map((child) =>
-                  RenderAccordionItems({ item: child, level: level + 1 }),
-                )}
+                {subItems.map((child) => RenderAccordionItems({ item: child }))}
               </ul>
             </Accordion.Content>
           )}
         </Accordion>
-      </li>
+      </MaybeWrap>
     );
   };
 
@@ -149,9 +153,7 @@ const View = ({ data, tocEntries }) => {
       )}
       <div ref={spacerRef} /> {/* Spacer div */}
       <div ref={tocRef} className="accordionMenu">
-        <ul className="accordion-list">
-          {tocEntries.map((item) => RenderAccordionItems({ item }))}
-        </ul>
+        {tocEntries.map((item) => RenderAccordionItems({ item }))}
       </div>
     </>
   );
