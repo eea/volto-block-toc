@@ -109,8 +109,10 @@ const View = ({ data, tocEntries }) => {
 
     return (
       <MaybeWrap
-        className={`list-item level-${level}`}
-        condition={!hasSubItems && level > 2}
+        className={cx(`list-item level-${level}`, {
+          'accordion-item': level > 2 && hasSubItems,
+        })}
+        condition={level > 2}
         as={(props) => <li key={id} {...props} />}
       >
         <Accordion fluid styled>
