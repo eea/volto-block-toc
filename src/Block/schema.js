@@ -13,6 +13,7 @@ const TableOfContentsSchema = ({ data }) => {
           ...(variation === 'default' ? ['ordered'] : []),
           ...(variation === 'horizontalMenu' ? ['sticky'] : []),
           ...(variation === 'accordionMenu' ? ['sticky'] : []),
+          ...(variation === 'accordionMenu' ? ['bulleted_list'] : []),
           'levels',
         ],
       },
@@ -44,6 +45,11 @@ const TableOfContentsSchema = ({ data }) => {
       ordered: {
         title: 'Ordered',
         type: 'boolean',
+      },
+      bulleted_list: {
+        title: 'Use bullet list',
+        type: 'boolean',
+        description: 'Bullet point for child items',
       },
     },
     required: [],
