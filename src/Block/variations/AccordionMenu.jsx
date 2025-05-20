@@ -5,58 +5,15 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { Accordion, Icon } from 'semantic-ui-react';
 import Slugger from 'github-slugger';
+
+import { MaybeWrap } from '@plone/volto/components';
 import { normalizeString } from './helpers';
 import './less/accordion-menu.less';
-
-const RenderAccordionItems = ({ items }) => {
-  const [activeItems, setActiveItems] = useState({});
-
-  const handleClick = (index, hasSubItems) => {
-    if (hasSubItems) {
-      setActiveItems((prevActiveItems) => ({
-        ...prevActiveItems,
-        [index]: !prevActiveItems[index],
-      }));
-    }
-  };
-
-  return (
-    <Accordion fluid styled>
-      {items.map((item, index) => {
-        const { title, override_toc, plaintext, items: subItems } = item;
-        const slug = override_toc
-          ? Slugger.slug(normalizeString(plaintext))
-          : Slugger.slug(normalizeString(title));
-
-        const isActive = !!activeItems[index];
-        const hasSubItems = subItems && subItems.length > 0;
-
-        return (
-          <React.Fragment key={index}>
-            <Accordion.Title
-              active={isActive}
-              onClick={() => handleClick(index, hasSubItems)}
-            >
-              {subItems && subItems.length > 0 && (
-                <Icon name={isActive ? 'angle up' : 'angle right'} />
-              )}
-              <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
-            </Accordion.Title>
-            <Accordion.Content active={isActive}>
-              {subItems && subItems.length > 0 && (
-                <RenderAccordionItems items={subItems} />
-              )}
-            </Accordion.Content>
-          </React.Fragment>
-        );
-      })}
-    </Accordion>
-  );
-};
 
 /**
  * View toc block class.
@@ -64,8 +21,10 @@ const RenderAccordionItems = ({ items }) => {
  * @extends Component
  */
 const View = ({ data, tocEntries }) => {
+  const { bulleted_list = false } = data;
   const tocRef = useRef(); // Ref for the ToC component
   const spacerRef = useRef(); // Ref for the spacer div
+  const [activeItems, setActiveItems] = useState({});
   //get relative offsetTop of an element
   function getOffsetTop(elem) {
     let offsetTop = 0;
@@ -130,6 +89,58 @@ const View = ({ data, tocEntries }) => {
     }
   }, [data.sticky]);
 
+  const RenderAccordionItems = ({ item }) => {
+    const handleClick = (id, hasSubItems) => {
+      if (hasSubItems) {
+        setActiveItems((prevActiveItems) => ({
+          ...prevActiveItems,
+          [id]: !prevActiveItems[id],
+        }));
+      }
+    };
+
+    const { title, override_toc, plaintext, items: subItems, id, level } = item;
+    const slug = override_toc
+      ? Slugger.slug(normalizeString(plaintext))
+      : Slugger.slug(normalizeString(title));
+
+    const isActive = !!activeItems[id];
+    const hasSubItems = subItems && subItems.length > 0;
+
+    return (
+      <MaybeWrap
+        className={cx(`list-item level-${level}`, {
+          'accordion-item': level > 2 && hasSubItems,
+        })}
+        condition={level > 2}
+        as={(props) => <li key={id} {...props} />}
+      >
+        <Accordion fluid styled>
+          <Accordion.Title
+            active={isActive}
+            onClick={() => handleClick(id, hasSubItems)}
+          >
+            {subItems && subItems.length > 0 && (
+              <Icon name={isActive ? 'angle up' : 'angle right'} />
+            )}
+            <AnchorLink href={`#${slug}`}>{title}</AnchorLink>
+          </Accordion.Title>
+          {hasSubItems && (
+            <Accordion.Content active={isActive}>
+              <ul
+                className={cx('accordion-list', {
+                  'accordion-list-bulleted': bulleted_list,
+                })}
+              >
+                {subItems.map((child) => RenderAccordionItems({ item: child }))}
+              </ul>
+            </Accordion.Content>
+          )}
+        </Accordion>
+      </MaybeWrap>
+    );
+  };
+
   return (
     <>
       {data.title && !data.hide_title && (
@@ -144,7 +155,7 @@ const View = ({ data, tocEntries }) => {
       )}
       <div ref={spacerRef} /> {/* Spacer div */}
       <div ref={tocRef} className="accordionMenu">
-        <RenderAccordionItems items={tocEntries} data={data} />
+        {tocEntries.map((item) => RenderAccordionItems({ item }))}
       </div>
     </>
   );
