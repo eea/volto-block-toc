@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-block-toc",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "description": "volto-block-toc: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
