@@ -177,17 +177,26 @@ export default compose(injectIntl, (WrappedComponent) => (props) => {
   const { data, device } = props;
   const { side_menu = false, variation } = data;
 
-  if (side_menu) {
-    const wrapped = (props) => (
-      <div className={cx('table-of-contents', variation, device)}>
-        <WrappedComponent {...props} />
-      </div>
-    );
-    const TocWithSideMenu = withEEASideMenu(wrapped);
-    return (
-      <TocWithSideMenu {...props} shouldRender={props.tocEntries?.length > 0} />
-    );
-  }
-
-  return <WrappedComponent {...props} />;
+  return (
+    <MaybeWrap
+      condition={side_menu}
+      as={(wrapperProps) => {
+        const wrapped = (innerProps) => (
+          <div className={cx('table-of-contents', variation, device)}>
+            <WrappedComponent {...innerProps} />
+          </div>
+        );
+        const TocWithSideMenu = withEEASideMenu(wrapped);
+        return (
+          <TocWithSideMenu
+            {...wrapperProps}
+            shouldRender={props.tocEntries?.length > 0}
+          />
+        );
+      }}
+      {...props}
+    >
+      <WrappedComponent {...props} />
+    </MaybeWrap>
+  );
 })(View);
