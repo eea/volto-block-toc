@@ -5,6 +5,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { compose } from 'redux';
 import cx from 'classnames';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import AnchorLink from 'react-anchor-link-smooth-scroll';
@@ -12,6 +13,7 @@ import { Accordion, Icon } from 'semantic-ui-react';
 import Slugger from 'github-slugger';
 
 import { MaybeWrap } from '@plone/volto/components';
+import withEEASideMenu from '@eeacms/volto-block-toc/hocs/withEEASideMenu';
 import { normalizeString } from './helpers';
 import './less/accordion-menu.less';
 
@@ -21,7 +23,7 @@ import './less/accordion-menu.less';
  * @extends Component
  */
 const View = ({ data, tocEntries }) => {
-  const { bulleted_list = false } = data;
+  const { bulleted_list = false, side_menu = false } = data;
   const tocRef = useRef(); // Ref for the ToC component
   const spacerRef = useRef(); // Ref for the spacer div
   const [activeItems, setActiveItems] = useState({});
@@ -39,7 +41,8 @@ const View = ({ data, tocEntries }) => {
   useEffect(() => {
     const toc = tocRef.current; // ToC element
     const spacer = spacerRef.current; // Spacer div element
-    if (data.sticky) {
+    //as side menu is sticky by-default
+    if (data.sticky && !side_menu) {
       // const parent = toc.parentElement;
       const tocOffsetTop = toc ? getOffsetTop(toc) : 0;
 
@@ -87,7 +90,7 @@ const View = ({ data, tocEntries }) => {
         window.removeEventListener('resize', updateTocWidthAndSpacer);
       };
     }
-  }, [data.sticky]);
+  }, [data.sticky, side_menu]);
 
   const RenderAccordionItems = ({ item }) => {
     const handleClick = (id, hasSubItems) => {
@@ -170,4 +173,30 @@ View.propTypes = {
   properties: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default injectIntl(View);
+export default compose(injectIntl, (WrappedComponent) => (props) => {
+  const { data, device } = props;
+  const { side_menu = false, variation } = data;
+
+  return (
+    <MaybeWrap
+      condition={side_menu}
+      as={(wrapperProps) => {
+        const wrapped = (innerProps) => (
+          <div className={cx('table-of-contents', variation, device)}>
+            <WrappedComponent {...innerProps} />
+          </div>
+        );
+        const TocWithSideMenu = withEEASideMenu(wrapped);
+        return (
+          <TocWithSideMenu
+            {...wrapperProps}
+            shouldRender={props.tocEntries?.length > 0}
+          />
+        );
+      }}
+      {...props}
+    >
+      <WrappedComponent {...props} />
+    </MaybeWrap>
+  );
+})(View);
