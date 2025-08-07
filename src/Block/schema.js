@@ -12,7 +12,7 @@ const TableOfContentsSchema = ({ data }) => {
           'hide_title',
           ...(variation === 'default' ? ['ordered'] : []),
           ...(variation === 'horizontalMenu' ? ['sticky'] : []),
-          ...(variation === 'accordionMenu' ? ['sticky'] : []),
+          ...(variation === 'accordionMenu' ? ['sticky', 'side_menu'] : []),
           ...(variation === 'accordionMenu' ? ['bulleted_list'] : []),
           'levels',
         ],
@@ -28,6 +28,10 @@ const TableOfContentsSchema = ({ data }) => {
       },
       sticky: {
         title: 'Sticky on top',
+        type: 'boolean',
+      },
+      side_menu: {
+        title: 'Use as side menu',
         type: 'boolean',
       },
       levels: {
