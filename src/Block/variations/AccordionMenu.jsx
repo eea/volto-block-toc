@@ -90,7 +90,7 @@ const View = ({ data, tocEntries }) => {
         window.removeEventListener('resize', updateTocWidthAndSpacer);
       };
     }
-  }, [data.sticky]);
+  }, [data.sticky, side_menu]);
 
   const RenderAccordionItems = ({ item }) => {
     const handleClick = (id, hasSubItems) => {
