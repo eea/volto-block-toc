@@ -79,6 +79,7 @@ const withEEASideMenu = (WrappedComponent) =>
       shouldRender = true,
       targetParentThreshold = '0px',
       fixedVisibilitySwitchTargetThreshold = targetParentThreshold,
+      hasWideContent = false,
     } = props;
     const visible = useFirstVisited(
       fixedVisibilitySwitchTarget,
@@ -109,12 +110,7 @@ const withEEASideMenu = (WrappedComponent) =>
     return (
       shouldRender && (
         <>
-          {' '}
-          <BodyClass
-            className={`${
-              insertBefore ? 'has-full-page-document' : 'has-side-nav'
-            }`}
-          />
+          {!hasWideContent && <BodyClass className="has-side-nav" />}
           {mode === 'edit' ? (
             <WrappedComponent {...props} />
           ) : (
@@ -148,6 +144,7 @@ export default compose(
     targetParentThreshold: '100px', // the threshold at which the menu will be visible when targetParent is not visible
     insertBefore: '#page-document', // add if you need the WrappedContent to be added before a certain element inside the targetParent
     wrapperClassName: 'custom-wrapper-class', // custom class for the wrapper div (default: 'eea-side-menu-wrapper')
+    hasWideContent: false, // controls if the side menu goes over the content area or not
     insertBeforeOnMobile: '.banner', // where to insert the side menu on mobile devices
     fixedVisibilitySwitchTarget: '.main.bar', // add if you need the menu to be fixed on certain element
     going out of view
