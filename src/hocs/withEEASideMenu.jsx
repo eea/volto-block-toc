@@ -1,10 +1,17 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useRef,
+  useCallback,
+} from 'react';
 import ReactDOM from 'react-dom';
 
 import { useFirstVisited } from '@eeacms/volto-block-toc/hooks';
 import withDeviceSize from '@eeacms/volto-block-toc/hocs/withDeviceSize';
 import { BodyClass, useDetectClickOutside } from '@plone/volto/helpers';
 import './less/side-nav.less';
+import useHasContent from '@eeacms/volto-block-toc/hooks/useHasContent';
 
 function IsomorphicPortal({
   children,
@@ -14,56 +21,79 @@ function IsomorphicPortal({
   wrapperClassName = 'eea-side-menu-wrapper',
 }) {
   const [isClient, setIsClient] = useState(false);
-  const containerRef = useRef(null);
-  const containerMobileRef = useRef(null);
+  const wrapperRef = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsClient(true);
 
-    const createContainer = (selector, containerRef) => {
-      const targetNode = document.querySelector(target);
-      const beforeNode = targetNode?.querySelector(selector);
+    const safeTarget = (target || '').trim();
+    const safeInsertBefore = (insertBefore || '').trim();
+    const safeInsertBeforeOnMobile = (insertBeforeOnMobile || '').trim();
 
-      if (targetNode && beforeNode && !containerRef.current) {
-        const div = document.createElement('div');
-        div.classList.add(wrapperClassName);
-        targetNode.insertBefore(div, beforeNode);
-        containerRef.current = div;
+    const ensureWrapperAt = (targetSelector, selector) => {
+      if (!targetSelector) return;
+      const targetNode = document.querySelector(targetSelector);
+      if (!targetNode) return;
+
+      const beforeNode = selector ? targetNode.querySelector(selector) : null;
+
+      let el = wrapperRef.current;
+      if (!el || !document.contains(el)) {
+        el = document.createElement('div');
+        el.classList.add(wrapperClassName);
+        el.setAttribute('data-eea-side-menu', 'true');
+        wrapperRef.current = el;
       }
-    };
 
-    const cleanupContainer = (containerRef) => {
-      if (containerRef.current) {
-        containerRef.current.remove();
-        containerRef.current = null;
+      const needsMove =
+        el.parentNode !== targetNode ||
+        (beforeNode ? el.nextSibling !== beforeNode : false);
+      if (needsMove) {
+        targetNode.insertBefore(el, beforeNode || targetNode.firstChild);
       }
+
+      // Cleanup any extra empty wrappers left behind
+      const all = document.querySelectorAll(`.${wrapperClassName}`);
+      all.forEach((w) => {
+        if (w !== wrapperRef.current && w.children.length === 0) {
+          w.remove();
+        }
+      });
     };
 
-    if (insertBefore) {
-      createContainer(insertBefore, containerRef);
-    }
-    if (insertBeforeOnMobile) {
-      createContainer(insertBeforeOnMobile, containerMobileRef);
+    if (safeInsertBeforeOnMobile) {
+      ensureWrapperAt(safeTarget, safeInsertBeforeOnMobile);
+    } else if (safeInsertBefore) {
+      ensureWrapperAt(safeTarget, safeInsertBefore);
+    } else if (safeTarget) {
+      const targetNode = document.querySelector(safeTarget);
+      if (targetNode) {
+        let el = wrapperRef.current;
+        if (!el || !document.contains(el)) {
+          el = document.createElement('div');
+          el.classList.add(wrapperClassName);
+          el.setAttribute('data-eea-side-menu', 'true');
+          wrapperRef.current = el;
+        }
+        if (el.parentNode !== targetNode) {
+          targetNode.insertBefore(el, targetNode.firstChild);
+        }
+      }
     }
 
-    return () => {
-      cleanupContainer(containerRef);
-      cleanupContainer(containerMobileRef);
-    };
+    // Persist wrapper across re-renders; no cleanup here
   }, [target, insertBefore, insertBeforeOnMobile, wrapperClassName]);
 
   if (!isClient) {
     return children;
   }
 
-  if (insertBefore && containerRef.current) {
-    return ReactDOM.createPortal(children, containerRef.current);
-  }
-  if (insertBeforeOnMobile && containerMobileRef.current) {
-    return ReactDOM.createPortal(children, containerMobileRef.current);
+  if (wrapperRef.current && document.contains(wrapperRef.current)) {
+    return ReactDOM.createPortal(children, wrapperRef.current);
   }
 
-  return ReactDOM.createPortal(children, document.querySelector(target));
+  const host = document.querySelector((target || '').trim());
+  return host ? ReactDOM.createPortal(children, host) : children;
 }
 
 const withEEASideMenu = (WrappedComponent) =>
@@ -79,14 +109,18 @@ const withEEASideMenu = (WrappedComponent) =>
       shouldRender = true,
       targetParentThreshold = '0px',
       fixedVisibilitySwitchTargetThreshold = targetParentThreshold,
-      hasWideContent = false,
     } = props;
+    const computedHasWideContent = props.hasWideContent ?? useHasContent();
     const visible = useFirstVisited(
       fixedVisibilitySwitchTarget,
       fixedVisibilitySwitchTargetThreshold,
     );
     const [isMenuOpen, setIsMenuOpen] = React.useState(true);
     const isSmallScreen = device === 'mobile' || device === 'tablet';
+    const effectiveInsertBefore =
+      !isSmallScreen && computedHasWideContent
+        ? '#page-document'
+        : insertBefore;
 
     const ClickOutsideListener = useCallback(() => {
       setIsMenuOpen(false);
@@ -110,14 +144,17 @@ const withEEASideMenu = (WrappedComponent) =>
     return (
       shouldRender && (
         <>
-          {!hasWideContent && <BodyClass className="has-side-nav" />}
+          {!computedHasWideContent && <BodyClass className="has-side-nav" />}
           {mode === 'edit' ? (
-            <WrappedComponent {...props} />
+            <WrappedComponent
+              {...props}
+              hasWideContent={computedHasWideContent}
+            />
           ) : (
             <IsomorphicPortal
               target={isSmallScreen ? targetParent : '#view'}
               insertBeforeOnMobile={isSmallScreen ? insertBeforeOnMobile : null}
-              insertBefore={insertBefore}
+              insertBefore={effectiveInsertBefore}
               wrapperClassName={wrapperClassName}
             >
               <div
@@ -127,6 +164,7 @@ const withEEASideMenu = (WrappedComponent) =>
                 <WrappedComponent
                   isMenuOpenOnOutsideClick={isMenuOpen}
                   {...props}
+                  hasWideContent={computedHasWideContent}
                 />
               </div>
             </IsomorphicPortal>
