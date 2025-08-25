@@ -26,7 +26,7 @@
 }
 
 // hide sidebar on toolbar content the Page teacher
-#toolbar:has(.toolbar-content.show)+#main .eea-side-menu.mobile {
+#toolbar:has(.toolbar-content.show) + #main .eea-side-menu.mobile {
   display: none;
 }
 
@@ -77,7 +77,7 @@
     display: none;
   }
 
-  #page-document:has(.banner > .image) .eea-side-menu+* {
+  #page-document:has(.banner > .image) .eea-side-menu + * {
     margin-top: 300px;
   }
 
@@ -86,7 +86,7 @@
     left: 0;
   }
 
-  #page-document .eea-side-menu:not(:empty)+* {
+  #page-document .eea-side-menu:not(:empty) + * {
     margin-top: 200px;
   }
 
@@ -111,7 +111,7 @@
         max-width: 900px;
       }
 
-      >.eea-side-menu {
+      > .eea-side-menu {
         position: sticky;
         top: 0;
         right: 1.5rem;
@@ -137,7 +137,6 @@
     margin-left: auto;
   }
 }
-
 
 // /* Show navigation when it's properly positioned in header */
 // to be continued
