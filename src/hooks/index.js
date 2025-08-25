@@ -29,4 +29,41 @@ function useFirstVisited(query, rootMargin = '0px') {
   return intersected;
 }
 
-export { useFirstVisited };
+// Tracks current in-viewport state of the element matching `query`
+function useInViewport(query, rootMargin = '0px') {
+  const [inView, setInView] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!__CLIENT__) return undefined;
+    const target = document.querySelector(query);
+
+    if (!target) {
+      setInView(false);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      {
+        rootMargin,
+        threshold: 0,
+        root: null,
+      },
+    );
+
+    observer.observe(target);
+
+    return () => {
+      try {
+        observer.unobserve(target);
+      } catch (_) {}
+      observer.disconnect();
+    };
+  }, [query, rootMargin]);
+
+  return inView;
+}
+
+export { useFirstVisited, useInViewport };
