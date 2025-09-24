@@ -147,9 +147,11 @@ const withEEASideMenu = (WrappedComponent) =>
       if (!sideMenuTransitionTarget) return;
 
       const transitionTarget = document.querySelector(sideMenuTransitionTarget);
-      const sideMenuWrapper = document.querySelector('.eea-side-menu-wrapper');
+      const sideMenuWrapper = document.querySelector(`.${wrapperClassName}`);
 
-      if (!transitionTarget || !sideMenuWrapper) return;
+      if (!transitionTarget || !sideMenuWrapper) {
+        return;
+      }
 
       const observer = new IntersectionObserver(
         (entries) => {
@@ -170,7 +172,7 @@ const withEEASideMenu = (WrappedComponent) =>
         {
           root: null, // Use viewport as root
           rootMargin: '0px',
-          threshold: 0.5, // Trigger when 50% of transition target is visible
+          threshold: 0.8, // Trigger when 80% of transition target is visible
         },
       );
 
@@ -179,7 +181,7 @@ const withEEASideMenu = (WrappedComponent) =>
       return () => {
         observer.disconnect();
       };
-    }, [sideMenuTransitionTarget]);
+    }, [sideMenuTransitionTarget, wrapperClassName]);
 
     return (
       shouldRender && (
@@ -226,7 +228,7 @@ export default compose(
     insertBeforeOnMobile: '.banner', // where to insert the side menu on mobile devices
     fixedVisibilitySwitchTarget: '.main.bar', // add if you need the menu to be fixed on certain element going out of view
     fixedVisibilitySwitchTargetThreshold: '100px', // overrides targetParentThreshold
-    sideMenuTransitionTarget: '.breadcrumbs', // element selector to observe for hiding side menu when out of view (default: '.breadcrumbs')
+    sideMenuTransitionTarget: '.breadcrumbs', // element selector to observe for hiding side menu when out of view
     })
 )(Component);
 */
