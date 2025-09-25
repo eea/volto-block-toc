@@ -126,6 +126,12 @@
   max-width: 1620px;
   height: 0;
   margin: 0 auto;
+  transform: translateY(-50px);
+  transition: transform 0.3s ease-in-out;
+
+  &.side-menu-transition-target-outside-view {
+    transform: translateY(-100%);
+  }
 
   .eea-side-menu {
     margin-left: auto;

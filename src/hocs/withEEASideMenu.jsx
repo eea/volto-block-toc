@@ -109,6 +109,7 @@ const withEEASideMenu = (WrappedComponent) =>
       shouldRender = true,
       targetParentThreshold = '0px',
       fixedVisibilitySwitchTargetThreshold = targetParentThreshold,
+      sideMenuTransitionTarget,
     } = props;
     const computedHasWideContent = props.hasWideContent ?? useHasContent();
     const visible = useFirstVisited(
@@ -140,6 +141,47 @@ const withEEASideMenu = (WrappedComponent) =>
         else sideNav.classList.remove('fixed');
       }
     }, [visible, targetParent, device]);
+
+    // Add transition target visibility observer
+    useEffect(() => {
+      if (!sideMenuTransitionTarget) return;
+
+      const transitionTarget = document.querySelector(sideMenuTransitionTarget);
+      const sideMenuWrapper = document.querySelector(`.${wrapperClassName}`);
+
+      if (!transitionTarget || !sideMenuWrapper) {
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              // Transition target is visible, show side menu
+              sideMenuWrapper.classList.remove(
+                'side-menu-transition-target-outside-view',
+              );
+            } else {
+              // Transition target is out of view, hide side menu
+              sideMenuWrapper.classList.add(
+                'side-menu-transition-target-outside-view',
+              );
+            }
+          });
+        },
+        {
+          root: null, // Use viewport as root
+          rootMargin: '0px',
+          threshold: 0.8, // Trigger when 80% of transition target is visible
+        },
+      );
+
+      observer.observe(transitionTarget);
+
+      return () => {
+        observer.disconnect();
+      };
+    }, [sideMenuTransitionTarget, wrapperClassName]);
 
     return (
       shouldRender && (
@@ -184,9 +226,10 @@ export default compose(
     wrapperClassName: 'custom-wrapper-class', // custom class for the wrapper div (default: 'eea-side-menu-wrapper')
     hasWideContent: false, // controls if the side menu goes over the content area or not
     insertBeforeOnMobile: '.banner', // where to insert the side menu on mobile devices
-    fixedVisibilitySwitchTarget: '.main.bar', // add if you need the menu to be fixed on certain element
-    going out of view
-    fixedVisibilitySwitchTargetThreshold: '100px' // overrides targetParentThreshold })
+    fixedVisibilitySwitchTarget: '.main.bar', // add if you need the menu to be fixed on certain element going out of view
+    fixedVisibilitySwitchTargetThreshold: '100px', // overrides targetParentThreshold
+    sideMenuTransitionTarget: '.breadcrumbs', // element selector to observe for hiding side menu when out of view
+    })
 )(Component);
 */
 
