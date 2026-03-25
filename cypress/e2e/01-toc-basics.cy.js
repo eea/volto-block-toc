@@ -1,5 +1,14 @@
 import { slateBeforeEach, slateAfterEach } from '../support/e2e';
 
+const SELECTED_SLATE_SELECTOR = '.slate-editor.selected [contenteditable=true]';
+
+function addHeading(text) {
+  cy.getSlate({ createNewSlate: true }).click().type(text).click();
+  cy.get(SELECTED_SLATE_SELECTOR).setSelection(text);
+  cy.clickSlateButton('Title');
+  cy.get(SELECTED_SLATE_SELECTOR).click().type('{enter}');
+}
+
 describe('Block Tests: Toc', () => {
   beforeEach(slateBeforeEach);
   afterEach(slateAfterEach);
@@ -36,21 +45,8 @@ describe('Block Tests: Toc', () => {
     cy.get('.button.toc').click();
 
     // Add headings
-    cy.get('.ui.drag.block.inner.slate').click().type('Title 1').click();
-    cy.get('.ui.drag.block.inner.slate span span span').setSelection('Title 1');
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').click().type('{enter}');
-
-    cy.get('.ui.drag.block.inner.slate').eq(1).click().type('Title 2').click();
-    cy.get('.ui.drag.block.inner.slate span span span')
-      .eq(1)
-      .setSelection('Title 2');
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').eq(1).click().type('{enter}');
+    addHeading('Title 1');
+    addHeading('Title 2');
 
     // Save page
     cy.get('#toolbar-save').click();
@@ -83,108 +79,7 @@ describe('Block Tests: Toc', () => {
     cy.contains('Sticky').click();
 
     // Add headings
-    cy.get('.ui.drag.block.inner.slate')
-      .click()
-      .type('Lorem ipsum dolor sit amet')
-      .click();
-    cy.get('.ui.drag.block.inner.slate span span span').setSelection(
-      'Lorem ipsum dolor sit amet',
-    );
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').click().type('{enter}');
-
-    cy.get('.ui.drag.block.inner.slate')
-      .eq(1)
-      .click()
-      .type('Lorem ipsum dolor sit amet')
-      .click();
-    cy.get('.ui.drag.block.inner.slate span span span')
-      .eq(1)
-      .setSelection('Lorem ipsum dolor sit amet');
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').eq(1).click().type('{enter}');
-
-    cy.get('.ui.drag.block.inner.slate')
-      .eq(2)
-      .click()
-      .type('Lorem ipsum dolor sit amet')
-      .click();
-    cy.get('.ui.drag.block.inner.slate span span span')
-      .eq(2)
-      .setSelection('Lorem ipsum dolor sit amet');
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').eq(2).click().type('{enter}');
-
-    cy.get('.ui.drag.block.inner.slate')
-      .eq(3)
-      .click()
-      .type('Lorem ipsum dolor sit amet')
-      .click();
-    cy.get('.ui.drag.block.inner.slate span span span')
-      .eq(3)
-      .setSelection('Lorem ipsum dolor sit amet');
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').eq(3).click().type('{enter}');
-
-    cy.get('.ui.drag.block.inner.slate')
-      .eq(4)
-      .click()
-      .type('Lorem ipsum dolor sit amet')
-      .click();
-    cy.get('.ui.drag.block.inner.slate span span span')
-      .eq(4)
-      .setSelection('Lorem ipsum dolor sit amet');
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').eq(4).click().type('{enter}');
-
-    cy.get('.ui.drag.block.inner.slate')
-      .eq(5)
-      .click()
-      .type('Lorem ipsum dolor sit amet')
-      .click();
-    cy.get('.ui.drag.block.inner.slate span span span')
-      .eq(5)
-      .setSelection('Lorem ipsum dolor sit amet');
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').eq(5).click().type('{enter}');
-
-    cy.get('.ui.drag.block.inner.slate')
-      .eq(6)
-      .click()
-      .type('Lorem ipsum dolor sit amet')
-      .click();
-    cy.get('.ui.drag.block.inner.slate span span span')
-      .eq(6)
-      .setSelection('Lorem ipsum dolor sit amet');
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').eq(6).click().type('{enter}');
-
-    cy.get('.ui.drag.block.inner.slate')
-      .eq(7)
-      .click()
-      .type('Lorem ipsum dolor sit amet')
-      .click();
-    cy.get('.ui.drag.block.inner.slate span span span')
-      .eq(7)
-      .setSelection('Lorem ipsum dolor sit amet');
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').eq(7).click().type('{enter}');
+    Cypress._.times(8, () => addHeading('Lorem ipsum dolor sit amet'));
 
     // Save page
     cy.get('#toolbar-save').click();
@@ -212,21 +107,8 @@ describe('Block Tests: Toc', () => {
     cy.contains('Side Menu').click();
 
     // Add headings
-    cy.get('.ui.drag.block.inner.slate').click().type('Title 1').click();
-    cy.get('.ui.drag.block.inner.slate span span span').setSelection('Title 1');
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').click().type('{enter}');
-
-    cy.get('.ui.drag.block.inner.slate').eq(1).click().type('Title 2').click();
-    cy.get('.ui.drag.block.inner.slate span span span')
-      .eq(1)
-      .setSelection('Title 2');
-    cy.get('.slate-inline-toolbar .button-wrapper a[title="Title"]').click({
-      force: true,
-    });
-    cy.get('.ui.drag.block.inner.slate').eq(1).click().type('{enter}');
+    addHeading('Title 1');
+    addHeading('Title 2');
 
     // Save page
     cy.get('#toolbar-save').click();
