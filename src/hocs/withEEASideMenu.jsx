@@ -9,7 +9,8 @@ import ReactDOM from 'react-dom';
 
 import { useFirstVisited } from '@eeacms/volto-block-toc/hooks';
 import withDeviceSize from '@eeacms/volto-block-toc/hocs/withDeviceSize';
-import { BodyClass, useDetectClickOutside } from '@plone/volto/helpers';
+import BodyClass from '@plone/volto/helpers/BodyClass/BodyClass';
+import { useDetectClickOutside } from '@plone/volto/helpers//Utils/useDetectClickOutside';
 import './less/side-nav.less';
 import useHasContent from '@eeacms/volto-block-toc/hooks/useHasContent';
 
