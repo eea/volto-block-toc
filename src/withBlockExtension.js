@@ -23,13 +23,11 @@ const withBlockExtensions = (WrappedComponent) => (props) => {
 
   const selectedExtension = extensions[index];
 
-  return (
-    <WrappedComponent
-      {...props}
-      extension={selectedExtension}
-      extensions={extensions}
-    />
-  );
+  return React.createElement(WrappedComponent, {
+    ...props,
+    extension: selectedExtension,
+    extensions,
+  });
 };
 
 export default withBlockExtensions;

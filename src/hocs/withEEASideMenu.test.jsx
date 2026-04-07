@@ -18,8 +18,7 @@ jest.mock('@eeacms/volto-block-toc/hooks/useHasContent', () => {
   return jest.fn(() => false);
 });
 
-jest.mock('@plone/volto/helpers', () => ({
-  BodyClass: ({ className }) => <div data-testid="body-class">{className}</div>,
+jest.mock('@plone/volto/helpers//Utils/useDetectClickOutside', () => ({
   useDetectClickOutside: jest.fn(() => ({ current: null })),
 }));
 
@@ -52,10 +51,11 @@ describe('withEEASideMenu', () => {
 
   // Get the mock reference
   const mockUseDetectClickOutside =
-    require('@plone/volto/helpers').useDetectClickOutside;
+    require('@plone/volto/helpers//Utils/useDetectClickOutside').useDetectClickOutside;
 
   beforeEach(() => {
     // Setup document structure
+    document.body.className = '';
     document.body.innerHTML = `
       <div class="eea header"></div>
       <div id="view"></div>
@@ -77,7 +77,7 @@ describe('withEEASideMenu', () => {
 
   it('adds body class', () => {
     render(<WrappedComponent />);
-    expect(screen.getByTestId('body-class')).toHaveTextContent('has-side-nav');
+    expect(document.body).toHaveClass('has-side-nav');
   });
 
   it('renders directly in edit mode', () => {
@@ -509,8 +509,8 @@ describe('withEEASideMenu', () => {
 
       render(<WrappedComponent hasWideContent={true} />);
 
-      // Should not render body class when hasWideContent is true
-      expect(screen.queryByTestId('body-class')).toBeNull();
+      // Should not add side-nav class when hasWideContent is true
+      expect(document.body).not.toHaveClass('has-side-nav');
     });
 
     it('uses #page-document as insertBefore when hasWideContent is true on desktop', () => {
