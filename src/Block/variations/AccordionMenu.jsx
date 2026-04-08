@@ -12,7 +12,7 @@ import AnchorLink from 'react-anchor-link-smooth-scroll';
 import { Accordion, Icon } from 'semantic-ui-react';
 import Slugger from 'github-slugger';
 
-import { MaybeWrap } from '@plone/volto/components';
+import MaybeWrap from '@plone/volto/components/manage/MaybeWrap/MaybeWrap';
 import withEEASideMenu from '@eeacms/volto-block-toc/hocs/withEEASideMenu';
 import { normalizeString } from './helpers';
 import './less/accordion-menu.less';

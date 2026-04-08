@@ -1,4 +1,6 @@
-import { Icon, MaybeWrap, UniversalLink } from '@plone/volto/components';
+import Icon from '@plone/volto/components/theme/Icon/Icon';
+import MaybeWrap from '@plone/volto/components/manage/MaybeWrap/MaybeWrap';
+import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
 import Slugger from 'github-slugger';
 import PropTypes from 'prop-types';
 import React from 'react';
