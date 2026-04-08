@@ -9,11 +9,11 @@ import { injectIntl } from 'react-intl';
 import cx from 'classnames';
 import { Message } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
+import { withBlockExtensions } from '@plone/volto/helpers//Extensions';
 import {
-  withBlockExtensions,
   getBlocksFieldname,
   getBlocksLayoutFieldname,
-} from '@plone/volto/helpers';
+} from '@plone/volto/helpers/Blocks/Blocks';
 import withDeviceSize from '@eeacms/volto-block-toc/hocs/withDeviceSize';
 
 export const getBlocksTocEntries = (properties, tocData) => {
