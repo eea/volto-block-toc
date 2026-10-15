@@ -15,6 +15,7 @@ jest.mock('@plone/volto/helpers//Extensions', () => ({
 }));
 
 jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
   useSelector: () => ({}),
   shallowEqual: () => true,
 }));
