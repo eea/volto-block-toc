@@ -5,6 +5,21 @@ import { IntlProvider } from 'react-intl';
 import config from '@plone/volto/registry';
 import View from './TocView';
 
+// Avoid loading the full Blocks helper module (it pulls in `uuid`, which is not
+// always resolvable in the addon test environment). Only these two helpers are
+// used by getBlocksTocEntries.
+jest.mock('@plone/volto/helpers/Blocks/Blocks', () => ({
+  __esModule: true,
+  getBlocksFieldname: (props) =>
+    Object.keys(props).find(
+      (key) => key !== 'volto.blocks' && key.endsWith('blocks'),
+    ) || null,
+  getBlocksLayoutFieldname: (props) =>
+    Object.keys(props).find(
+      (key) => key !== 'volto.blocks' && key.endsWith('blocks_layout'),
+    ) || null,
+}));
+
 jest.mock('@eeacms/volto-block-toc/hocs/withDeviceSize', () => ({
   __esModule: true,
   default: (WrappedComponent) => WrappedComponent,
