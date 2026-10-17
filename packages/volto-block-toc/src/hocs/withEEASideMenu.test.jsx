@@ -4,6 +4,8 @@ import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom'; // Add this import for toBeInTheDocument matcher
 import withEEASideMenu from './withEEASideMenu';
 import { useFirstVisited } from '@eeacms/volto-block-toc/hooks';
+import { useDetectClickOutside } from '@plone/volto/helpers//Utils/useDetectClickOutside';
+import useHasContent from '@eeacms/volto-block-toc/hooks/useHasContent';
 
 // Mock the dependencies
 vi.mock('@eeacms/volto-block-toc/hooks', () => ({
@@ -55,8 +57,7 @@ describe('withEEASideMenu', () => {
   const WrappedComponent = withEEASideMenu(MockComponent);
 
   // Get the mock reference
-  const mockUseDetectClickOutside =
-    require('@plone/volto/helpers//Utils/useDetectClickOutside').useDetectClickOutside;
+  const mockUseDetectClickOutside = useDetectClickOutside;
 
   beforeEach(() => {
     // Setup document structure
@@ -509,7 +510,6 @@ describe('withEEASideMenu', () => {
 
   describe('Wide content scenarios', () => {
     it('adds has-full-page-document body class when hasWideContent is true', () => {
-      const useHasContent = require('@eeacms/volto-block-toc/hooks/useHasContent');
       useHasContent.mockReturnValue(true);
 
       render(<WrappedComponent hasWideContent={true} />);
@@ -519,7 +519,6 @@ describe('withEEASideMenu', () => {
     });
 
     it('uses #page-document as insertBefore when hasWideContent is true on desktop', () => {
-      const useHasContent = require('@eeacms/volto-block-toc/hooks/useHasContent');
       useHasContent.mockReturnValue(true);
 
       // Create page-document element
@@ -539,7 +538,6 @@ describe('withEEASideMenu', () => {
     });
 
     it('ignores #page-document insertBefore on mobile even with wide content', () => {
-      const useHasContent = require('@eeacms/volto-block-toc/hooks/useHasContent');
       useHasContent.mockReturnValue(true);
 
       render(
