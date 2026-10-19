@@ -132,7 +132,7 @@ const View = (props) => {
       defaultOpen={device === 'mobile' || device === 'tablet'}
       tocEntries={tocEntries}
       isMenuOpenOnOutsideClick={isMenuOpenOnOutsideClick}
-      title={data?.title}
+      title={tocEntries?.length > 0 ? data?.title : null}
     />
   );
 };
