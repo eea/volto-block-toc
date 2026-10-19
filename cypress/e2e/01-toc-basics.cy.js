@@ -7,6 +7,10 @@ function addHeading(text) {
   cy.get(SELECTED_SLATE_SELECTOR).setSelection(text);
   cy.clickSlateButton('Title');
   cy.get(SELECTED_SLATE_SELECTOR).click().type('{enter}');
+  // Wait for the newly created empty block to be persisted before the next
+  // heading is typed into it. Otherwise the pending block-creation update can
+  // overwrite the typed text (leaving the block empty).
+  cy.wait(1000);
 }
 
 describe('Block Tests: Toc', () => {
