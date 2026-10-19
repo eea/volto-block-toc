@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
@@ -8,7 +9,7 @@ import View from './TocView';
 // Avoid loading the full Blocks helper module (it pulls in `uuid`, which is not
 // always resolvable in the addon test environment). Only these two helpers are
 // used by getBlocksTocEntries.
-jest.mock('@plone/volto/helpers/Blocks/Blocks', () => ({
+vi.mock('@plone/volto/helpers/Blocks/Blocks', () => ({
   __esModule: true,
   getBlocksFieldname: (props) =>
     Object.keys(props).find(
@@ -20,17 +21,17 @@ jest.mock('@plone/volto/helpers/Blocks/Blocks', () => ({
     ) || null,
 }));
 
-jest.mock('@eeacms/volto-block-toc/hocs/withDeviceSize', () => ({
+vi.mock('@eeacms/volto-block-toc/hocs/withDeviceSize', () => ({
   __esModule: true,
   default: (WrappedComponent) => WrappedComponent,
 }));
 
-jest.mock('@plone/volto/helpers//Extensions', () => ({
+vi.mock('@plone/volto/helpers//Extensions', () => ({
   withBlockExtensions: (WrappedComponent) => WrappedComponent,
 }));
 
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
+vi.mock('react-redux', async (importOriginal) => ({
+  ...(await importOriginal()),
   useSelector: () => ({}),
   shallowEqual: () => true,
 }));

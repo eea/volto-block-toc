@@ -2,10 +2,28 @@ import { slateBeforeEach, slateAfterEach } from '../support/e2e';
 
 const SELECTED_SLATE_SELECTOR = '.slate-editor.selected [contenteditable=true]';
 
+// Volto 18's SlateEditor resets its children to the `value` prop whenever the
+// block form re-renders with a pre-typing snapshot; the ToC block re-renders on
+// every entry change, which makes that race easy to hit right after a block is
+// inserted and the typed text is dropped. Type again when it happens - the
+// assertion in addHeading() still fails the test if the text never sticks.
+function typeHeading(text, attemptsLeft = 3) {
+  cy.get(SELECTED_SLATE_SELECTOR)
+    .click()
+    .type(text)
+    .then(() => cy.wait(250))
+    .then(() => {
+      cy.get(SELECTED_SLATE_SELECTOR).then(($editor) => {
+        if ($editor.text().includes(text) || attemptsLeft <= 1) return;
+        cy.then(() => typeHeading(text, attemptsLeft - 1));
+      });
+    });
+}
+
 function addHeading(text) {
-  cy.getSlate({ createNewSlate: true }).click().type(text).click();
-  // Make sure the text is still in the editor (Slate can briefly reset a
-  // freshly created block) before computing the selection offsets.
+  cy.getSlate({ createNewSlate: true }).click();
+  typeHeading(text);
+  cy.get(SELECTED_SLATE_SELECTOR).click();
   cy.get(SELECTED_SLATE_SELECTOR).should('contain.text', text).setSelection(text);
   cy.clickSlateButton('Title');
   cy.get(SELECTED_SLATE_SELECTOR).click().type('{enter}');

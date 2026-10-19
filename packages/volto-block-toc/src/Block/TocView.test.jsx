@@ -1,10 +1,11 @@
+import { vi } from 'vitest';
 import { getBlocksTocEntries } from './TocView';
 import config from '@plone/volto/registry';
 
 // Avoid loading the full Blocks helper module (it pulls in `uuid`, which is not
 // always resolvable in the addon test environment). Only these two helpers are
 // used by getBlocksTocEntries.
-jest.mock('@plone/volto/helpers/Blocks/Blocks', () => ({
+vi.mock('@plone/volto/helpers/Blocks/Blocks', () => ({
   __esModule: true,
   getBlocksFieldname: (props) =>
     Object.keys(props).find(
@@ -16,7 +17,7 @@ jest.mock('@plone/volto/helpers/Blocks/Blocks', () => ({
     ) || null,
 }));
 
-jest.mock('@plone/volto/registry', () => ({
+vi.mock('@plone/volto/registry', () => ({
   __esModule: true,
   default: {
     settings: {},
@@ -54,7 +55,7 @@ describe('getBlocksTocEntries toc context', () => {
   });
 
   it('forwards the context to tocEntry as well', () => {
-    const spy = jest.fn(() => [2, 'entry']);
+    const spy = vi.fn(() => [2, 'entry']);
     config.blocks.blocksConfig = {
       custom: {
         tocEntry: spy,
