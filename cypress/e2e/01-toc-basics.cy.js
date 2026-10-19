@@ -4,7 +4,9 @@ const SELECTED_SLATE_SELECTOR = '.slate-editor.selected [contenteditable=true]';
 
 function addHeading(text) {
   cy.getSlate({ createNewSlate: true }).click().type(text).click();
-  cy.get(SELECTED_SLATE_SELECTOR).setSelection(text);
+  // Make sure the text is still in the editor (Slate can briefly reset a
+  // freshly created block) before computing the selection offsets.
+  cy.get(SELECTED_SLATE_SELECTOR).should('contain.text', text).setSelection(text);
   cy.clickSlateButton('Title');
   cy.get(SELECTED_SLATE_SELECTOR).click().type('{enter}');
   // Wait for the newly created empty block to be persisted before the next

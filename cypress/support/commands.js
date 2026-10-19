@@ -356,20 +356,22 @@ Cypress.Commands.add(
   { prevSubject: true },
   (subject, query, endQuery) => {
     return cy.wrap(subject).selection(($el) => {
+      const el = $el[0];
       if (typeof query === 'string') {
-        const anchorNode = getTextNode($el[0], query);
-        const focusNode = endQuery ? getTextNode($el[0], endQuery) : anchorNode;
-        const anchorOffset = anchorNode.wholeText.indexOf(query);
-        const focusOffset = endQuery
-          ? focusNode.wholeText.indexOf(endQuery) + endQuery.length
-          : anchorOffset + query.length;
-        setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+        const anchorIndex = getTextIndex(el, query);
+        const focusIndex = endQuery
+          ? getTextIndex(el, endQuery) + endQuery.length
+          : anchorIndex + query.length;
+        const anchor = getTextPosition(el, anchorIndex);
+        const focus = getTextPosition(el, focusIndex);
+        setBaseAndExtent(anchor.node, anchor.offset, focus.node, focus.offset);
       } else if (typeof query === 'object') {
-        const el = $el[0];
-        const anchorNode = getTextNode(el.querySelector(query.anchorQuery));
+        const anchorNode = getFirstTextNode(
+          el.querySelector(query.anchorQuery),
+        );
         const anchorOffset = query.anchorOffset || 0;
         const focusNode = query.focusQuery
-          ? getTextNode(el.querySelector(query.focusQuery))
+          ? getFirstTextNode(el.querySelector(query.focusQuery))
           : anchorNode;
         const focusOffset = query.focusOffset || 0;
         setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
@@ -460,12 +462,15 @@ Cypress.Commands.add(
   { prevSubject: true },
   (subject, query, atStart) => {
     return cy.wrap(subject).selection(($el) => {
-      const node = getTextNode($el[0], query);
-      const offset =
-        node.wholeText.indexOf(query) + (atStart ? 0 : query.length);
-      const document = node.ownerDocument;
-      document.getSelection().removeAllRanges();
-      document.getSelection().collapse(node, offset);
+      const el = $el[0];
+      const index = getTextIndex(el, query);
+      const position = getTextPosition(
+        el,
+        index + (atStart ? 0 : query.length),
+      );
+      const doc = el.ownerDocument;
+      doc.getSelection().removeAllRanges();
+      doc.getSelection().collapse(position.node, position.offset);
     });
     // Depending on what you're testing, you may need to chain a `.click()` here to ensure
     // further commands are picked up by whatever you're testing (this was required for Slate, for example).
@@ -489,18 +494,54 @@ Cypress.Commands.add(
 );
 
 // Helper functions
-function getTextNode(el, match) {
-  const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
-  if (!match) {
-    return walk.nextNode();
-  }
-
+function getTextNodes(el) {
+  const walk = el.ownerDocument.createTreeWalker(
+    el,
+    NodeFilter.SHOW_TEXT,
+    null,
+    false,
+  );
+  const nodes = [];
   let node;
   while ((node = walk.nextNode())) {
-    if (node.wholeText.includes(match)) {
-      return node;
-    }
+    nodes.push(node);
   }
+  return nodes;
+}
+
+function getFirstTextNode(el) {
+  return getTextNodes(el)[0];
+}
+
+// Slate can split the same logical string across several DOM text nodes (for
+// example when marks/decorations are involved), so search the concatenated
+// text instead of relying on a single node's `wholeText`.
+function getTextIndex(el, match) {
+  const index = el.textContent.indexOf(match);
+  if (index === -1) {
+    throw new Error(
+      `Unable to find text "${match}" in the editor. ` +
+        `Editor content: "${el.textContent}"`,
+    );
+  }
+  return index;
+}
+
+// Map an absolute character offset in `el.textContent` to a DOM node/offset.
+function getTextPosition(el, index) {
+  const nodes = getTextNodes(el);
+  let offset = 0;
+  for (const node of nodes) {
+    const length = node.textContent.length;
+    if (index <= offset + length) {
+      return { node, offset: index - offset };
+    }
+    offset += length;
+  }
+  const last = nodes[nodes.length - 1];
+  return last
+    ? { node: last, offset: last.textContent.length }
+    : { node: el, offset: 0 };
 }
 
 function setBaseAndExtent(...args) {
