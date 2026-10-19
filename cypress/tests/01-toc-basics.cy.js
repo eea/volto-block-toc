@@ -1,20 +1,18 @@
 import { slateBeforeEach, slateAfterEach } from '../support/e2e';
 
+const SELECTED_SLATE_SELECTOR = '.slate-editor.selected [contenteditable=true]';
+
 function addHeading(text) {
-  cy.getSlate({ createNewSlate: true })
-    .click()
-    .type(text)
-    .then(($editor) => {
-      // Freeze the editor that received the text. On Volto 18 more than one
-      // `.slate-editor` can be `.selected` at this point (the ToC block re-render
-      // makes 18.35.1 focus the editor synchronously - plone/volto#8406 only
-      // landed in 18.36.0), so re-querying the selector resolves to a different,
-      // empty editor and the selection ends up outside the typed text.
-      cy.wrap($editor).should('contain.text', text);
-      cy.wrap($editor).setSelection(text);
-      cy.clickSlateButton('Title');
-      cy.wrap($editor).click().type('{enter}');
-    });
+  cy.getSlate({ createNewSlate: true }).click().type(text).click();
+  // Make sure the text is still in the editor (Slate can briefly reset a
+  // freshly created block) before computing the selection offsets.
+  cy.get(SELECTED_SLATE_SELECTOR).should('contain.text', text).setSelection(text);
+  cy.clickSlateButton('Title');
+  cy.get(SELECTED_SLATE_SELECTOR).click().type('{enter}');
+  // Wait for the newly created empty block to be persisted before the next
+  // heading is typed into it. Otherwise the pending block-creation update can
+  // overwrite the typed text (leaving the block empty).
+  cy.wait(1000);
 }
 
 describe('Block Tests: Toc', () => {
