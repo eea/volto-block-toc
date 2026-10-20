@@ -160,7 +160,7 @@ const View = ({ data, tocEntries }) => {
 
   return (
     <>
-      {data.title && !data.hide_title ? (
+      {data.title && tocEntries?.length > 0 && !data.hide_title ? (
         <h2>
           {data.title || (
             <FormattedMessage

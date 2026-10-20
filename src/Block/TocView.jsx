@@ -5,7 +5,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { useSelector, shallowEqual } from 'react-redux';
 import cx from 'classnames';
 import { Message } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
@@ -16,7 +17,7 @@ import {
 } from '@plone/volto/helpers/Blocks/Blocks';
 import withDeviceSize from '@eeacms/volto-block-toc/hocs/withDeviceSize';
 
-export const getBlocksTocEntries = (properties, tocData) => {
+export const getBlocksTocEntries = (properties, tocData, tocContext = {}) => {
   const blocksFieldName = getBlocksFieldname(properties);
   const blocksLayoutFieldname = getBlocksLayoutFieldname(properties);
 
@@ -43,10 +44,14 @@ export const getBlocksTocEntries = (properties, tocData) => {
       return null;
     }
 
-    const blockTocEntry = blockConfig.tocEntry?.(block, tocData);
+    // Expose the runtime context (e.g. visibility of conditional blocks) and
+    // the block id to the tocEntry/tocEntries hooks, so blocks whose entries
+    // depend on runtime data (like the conditional data block) can opt out.
+    const blockContext = { ...tocContext, id };
+    const blockTocEntry = blockConfig.tocEntry?.(block, tocData, blockContext);
 
     const blockTocEntries = [
-      ...(blockConfig.tocEntries?.(block, tocData) ||
+      ...(blockConfig.tocEntries?.(block, tocData, blockContext) ||
         (blockTocEntry ? [blockTocEntry] : [])),
     ];
 
@@ -87,9 +92,21 @@ export const getBlocksTocEntries = (properties, tocData) => {
  * @class View
  * @extends Component
  */
+const EMPTY_CONTEXT = {};
+
 const View = (props) => {
   const { data, variation } = props;
   const metadata = props.metadata || props.properties;
+
+  // Optional add-on provided selector that exposes runtime state (for example
+  // the visibility of conditional data blocks) to the tocEntry/tocEntries
+  // hooks. Configure it through `config.settings.toc.contextSelector`.
+  const contextSelector = config.settings.toc?.contextSelector;
+  const selectedContext = useSelector(
+    (state) => (contextSelector ? contextSelector(state) : EMPTY_CONTEXT),
+    shallowEqual,
+  );
+  const tocContext = selectedContext || EMPTY_CONTEXT;
 
   const tocEntries = React.useMemo(() => {
     let entries = [];
@@ -98,6 +115,7 @@ const View = (props) => {
     const { rootLevel, tocEntries, tocEntriesLayout } = getBlocksTocEntries(
       metadata,
       data,
+      { ...tocContext, contentUid: metadata?.UID || metadata?.['@id'] },
     );
 
     tocEntriesLayout.forEach((id) => {
@@ -128,17 +146,26 @@ const View = (props) => {
     });
 
     return entries;
-  }, [data, metadata]);
+  }, [data, metadata, tocContext]);
 
   const Renderer = variation?.view;
+  const isEmpty = !tocEntries.length;
 
   return (
-    <div className={cx('table-of-contents', variation?.id, props.device)}>
-      {props.mode === 'edit' && !data.title && !tocEntries.length && (
-        <Message>Table of content</Message>
-      )}
-
-      {Renderer ? (
+    <div
+      className={cx('table-of-contents', variation?.id, props.device, {
+        'empty-toc': isEmpty,
+      })}
+    >
+      {props.mode === 'edit' && isEmpty ? (
+        <Message className="toc-placeholder">
+          {data.title && !data.hide_title ? <h2>{data.title}</h2> : null}
+          <FormattedMessage
+            id="The table of contents is empty. Add headings to the page or adjust the selected entry levels."
+            defaultMessage="The table of contents is empty. Add headings to the page or adjust the selected entry levels."
+          />
+        </Message>
+      ) : Renderer ? (
         <Renderer {...props} tocEntries={tocEntries} properties={metadata} />
       ) : (
         <div>View extension not found</div>
