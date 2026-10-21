@@ -1,18 +1,43 @@
 import { slateBeforeEach, slateAfterEach } from '../support/e2e';
 
 const SELECTED_SLATE_SELECTOR = '.slate-editor.selected [contenteditable=true]';
+const SELECTED_SLATE_EDITOR = '.slate-editor.selected';
+
+function addTextBlock() {
+  // Insert a dedicated Text block after the currently selected block instead
+  // of relying on the empty block that Slate splits off on {enter}.
+  cy.get('.ui.basic.icon.button.block-add-button').first().click();
+  cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']").type(
+    'text',
+  );
+  cy.get('.blocks-chooser .button.slate').click();
+}
 
 function addHeading(text) {
-  cy.getSlate({ createNewSlate: true }).click().type(text).click();
-  // Make sure the text is still in the editor (Slate can briefly reset a
-  // freshly created block) before computing the selection offsets.
+  // Every heading gets its own Text block. The previous implementation reused
+  // the block created by {enter}, but that split issues separate, asynchronous
+  // `blocks`/`blocks_layout` updates which can land after the next heading was
+  // typed and reset it to an empty block.
+  addTextBlock();
+
+  // Slate focuses a freshly inserted block in a deferred effect. Wait for it
+  // before typing, otherwise keystrokes can land in the previous editor.
+  cy.get(SELECTED_SLATE_SELECTOR)
+    .should('be.focused')
+    .click()
+    .type(text)
+    .click();
+
+  // Make sure the text is still in the editor before computing the selection
+  // offsets.
   cy.get(SELECTED_SLATE_SELECTOR).should('contain.text', text).setSelection(text);
   cy.clickSlateButton('Title');
-  cy.get(SELECTED_SLATE_SELECTOR).click().type('{enter}');
-  // Wait for the newly created empty block to be persisted before the next
-  // heading is typed into it. Otherwise the pending block-creation update can
-  // overwrite the typed text (leaving the block empty).
-  cy.wait(1000);
+
+  // Wait for the heading formatting to be committed to the block value before
+  // creating the next block.
+  cy.get(SELECTED_SLATE_EDITOR).should(($editor) => {
+    expect($editor.attr('data-slate-value')).to.contain('"h2"');
+  });
 }
 
 describe('Block Tests: Toc', () => {
