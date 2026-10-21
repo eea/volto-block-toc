@@ -13,14 +13,17 @@ function slateValueIsEmpty(editor) {
 }
 
 function typeIntoSelectedSlate(text, attempt = 1) {
-  // The selected editor must be the freshly created (last) slate block. If it
-  // isn't, typing would silently corrupt the previous heading.
+  // Target the last Slate block explicitly and click it. Volto selects a block
+  // on click, so we don't depend on whatever happened to be selected before
+  // (a freshly created block isn't always selected in every setup).
+  cy.get(SLATE_BLOCK_SELECTOR)
+    .last()
+    .find('[contenteditable=true]')
+    .click();
+
   cy.get(SLATE_BLOCK_SELECTOR).last().should('have.class', 'selected');
 
-  cy.get(SELECTED_SLATE_SELECTOR)
-    .should('be.focused')
-    .click()
-    .type(text);
+  cy.get(SELECTED_SLATE_SELECTOR).should('be.focused').type(text);
 
   // A pending block insert/split update can land right after typing and reset
   // the freshly created block to an empty one. Give the delayed focus/selection
