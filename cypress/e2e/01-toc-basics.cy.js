@@ -2,31 +2,60 @@ import { slateBeforeEach, slateAfterEach } from '../support/e2e';
 
 const SELECTED_SLATE_SELECTOR = '.slate-editor.selected [contenteditable=true]';
 const SELECTED_SLATE_EDITOR = '.slate-editor.selected';
+const SLATE_BLOCK_SELECTOR = '.content-area .slate-editor';
+const MAX_TYPE_ATTEMPTS = 4;
 
-function addTextBlock() {
-  // Insert a dedicated Text block after the currently selected block instead
-  // of relying on the empty block that Slate splits off on {enter}.
-  cy.get('.ui.basic.icon.button.block-add-button').first().click();
-  cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']").type(
-    'text',
-  );
-  cy.get('.blocks-chooser .button.slate').click();
+function slateValueIsEmpty(editor) {
+  const value = editor.attr('data-slate-value');
+  if (!value || value === 'null') return true;
+  // The block value was committed but contains no non-empty text node.
+  return !/"text"\s*:\s*"[^"]+"/.test(value);
 }
 
-function addHeading(text) {
-  // Every heading gets its own Text block. The previous implementation reused
-  // the block created by {enter}, but that split issues separate, asynchronous
-  // `blocks`/`blocks_layout` updates which can land after the next heading was
-  // typed and reset it to an empty block.
-  addTextBlock();
+function typeIntoSelectedSlate(text, attempt = 1) {
+  // The selected editor must be the freshly created (last) slate block. If it
+  // isn't, typing would silently corrupt the previous heading.
+  cy.get(SLATE_BLOCK_SELECTOR).last().should('have.class', 'selected');
 
-  // Slate focuses a freshly inserted block in a deferred effect. Wait for it
-  // before typing, otherwise keystrokes can land in the previous editor.
   cy.get(SELECTED_SLATE_SELECTOR)
     .should('be.focused')
     .click()
-    .type(text)
-    .click();
+    .type(text);
+
+  // A pending block insert/split update can land right after typing and reset
+  // the freshly created block to an empty one. Give the delayed focus/selection
+  // timers (100-200ms) time to arrive before checking whether the text
+  // survived.
+  cy.wait(500);
+
+  cy.get(SELECTED_SLATE_EDITOR).then(($editor) => {
+    // Use the rendered text first: it updates immediately, while the committed
+    // block value can lag behind a fast keystroke sequence.
+    if ($editor.text().includes(text)) return;
+
+    // Only retry the known "fresh block reset to empty" race. Anything else
+    // is a genuine problem and shouldn't be hidden by a retry.
+    expect(
+      slateValueIsEmpty($editor),
+      `Slate block to be empty after typing "${text}" (value: ${$editor.attr(
+        'data-slate-value',
+      )})`,
+    ).to.be.true;
+    expect(
+      attempt,
+      `"${text}" to stay in the Slate block after ${attempt} attempt(s)`,
+    ).to.be.lessThan(MAX_TYPE_ATTEMPTS);
+
+    typeIntoSelectedSlate(text, attempt + 1);
+  });
+}
+
+function addHeading(text) {
+  // Reuse the block created by the previous {enter} (or create the first one
+  // when the page has no slate block yet).
+  cy.getSlate({ createNewSlate: true }).then(() => {
+    typeIntoSelectedSlate(text);
+  });
 
   // Make sure the text is still in the editor before computing the selection
   // offsets.
@@ -37,6 +66,18 @@ function addHeading(text) {
   // creating the next block.
   cy.get(SELECTED_SLATE_EDITOR).should(($editor) => {
     expect($editor.attr('data-slate-value')).to.contain('"h2"');
+  });
+
+  // {enter} splits the heading into its own block and creates the empty block
+  // that the next heading is typed into. Wait for it, otherwise the next
+  // heading would be appended to this one.
+  cy.get(SLATE_BLOCK_SELECTOR).then(($editors) => {
+    const blockCount = $editors.length;
+    cy.get(SELECTED_SLATE_SELECTOR).click().type('{enter}');
+    cy.get(SLATE_BLOCK_SELECTOR, { timeout: 10000 }).should(
+      'have.length',
+      blockCount + 1,
+    );
   });
 }
 
