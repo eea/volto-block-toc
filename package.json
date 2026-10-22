@@ -71,8 +71,5 @@
     "cypress:run": "make cypress-run",
     "cypress:open": "make cypress-open",
     "prepare": "husky install"
-  },
-  "engines": {
-    "node": ">=22 <23"
   }
 }
