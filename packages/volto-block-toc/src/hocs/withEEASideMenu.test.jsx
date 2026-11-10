@@ -1,57 +1,63 @@
+import { vi } from 'vitest';
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom'; // Add this import for toBeInTheDocument matcher
 import withEEASideMenu from './withEEASideMenu';
 import { useFirstVisited } from '@eeacms/volto-block-toc/hooks';
+import { useDetectClickOutside } from '@plone/volto/helpers//Utils/useDetectClickOutside';
+import useHasContent from '@eeacms/volto-block-toc/hooks/useHasContent';
 
 // Mock the dependencies
-jest.mock('@eeacms/volto-block-toc/hooks', () => ({
-  useFirstVisited: jest.fn(),
+vi.mock('@eeacms/volto-block-toc/hooks', () => ({
+  useFirstVisited: vi.fn(),
 }));
 
-jest.mock('@eeacms/volto-block-toc/hocs/withDeviceSize', () => {
-  return (Component) => (props) => <Component {...props} device="desktop" />;
+vi.mock('@eeacms/volto-block-toc/hocs/withDeviceSize', () => {
+  return {
+    default: (Component) => (props) => (
+      <Component {...props} device="desktop" />
+    ),
+  };
 });
 
 // Mock useHasContent hook
-jest.mock('@eeacms/volto-block-toc/hooks/useHasContent', () => {
-  return jest.fn(() => false);
+vi.mock('@eeacms/volto-block-toc/hooks/useHasContent', () => {
+  return { default: vi.fn(() => false) };
 });
 
-jest.mock('@plone/volto/helpers//Utils/useDetectClickOutside', () => ({
-  useDetectClickOutside: jest.fn(() => ({ current: null })),
+vi.mock('@plone/volto/helpers//Utils/useDetectClickOutside', () => ({
+  useDetectClickOutside: vi.fn(() => ({ current: null })),
 }));
 
 // Mock ReactDOM.createPortal
-jest.mock('react-dom', () => ({
-  ...jest.requireActual('react-dom'),
+vi.mock('react-dom', async () => ({
+  ...(await vi.importActual('react-dom')),
   createPortal: (element) => element,
 }));
 
 // Mock IntersectionObserver
-const mockObserve = jest.fn();
-const mockDisconnect = jest.fn();
+const mockObserve = vi.fn();
+const mockDisconnect = vi.fn();
 
-global.IntersectionObserver = jest.fn(() => ({
+global.IntersectionObserver = vi.fn(() => ({
   observe: mockObserve,
   disconnect: mockDisconnect,
 }));
 
 // Mock requestAnimationFrame
-global.requestAnimationFrame = jest.fn((cb) => {
+global.requestAnimationFrame = vi.fn((cb) => {
   setTimeout(cb, 0);
   return 1;
 });
 
-global.cancelAnimationFrame = jest.fn();
+global.cancelAnimationFrame = vi.fn();
 
 describe('withEEASideMenu', () => {
   const MockComponent = () => <div data-testid="wrapped-component">Test</div>;
   const WrappedComponent = withEEASideMenu(MockComponent);
 
   // Get the mock reference
-  const mockUseDetectClickOutside =
-    require('@plone/volto/helpers//Utils/useDetectClickOutside').useDetectClickOutside;
+  const mockUseDetectClickOutside = useDetectClickOutside;
 
   beforeEach(() => {
     // Setup document structure
@@ -379,7 +385,7 @@ describe('withEEASideMenu', () => {
     it('falls back to direct portal when wrapper is not available', () => {
       // Mock createPortal to track calls
       const originalCreatePortal = require('react-dom').createPortal;
-      const mockCreatePortal = jest.fn(originalCreatePortal);
+      const mockCreatePortal = vi.fn(originalCreatePortal);
       require('react-dom').createPortal = mockCreatePortal;
 
       // Create target but don't let wrapper be created properly
@@ -482,7 +488,7 @@ describe('withEEASideMenu', () => {
 
       // Mock document.contains to return false for wrapper
       const originalContains = document.contains;
-      document.contains = jest.fn((node) => {
+      document.contains = vi.fn((node) => {
         if (
           node &&
           node.classList &&
@@ -504,7 +510,6 @@ describe('withEEASideMenu', () => {
 
   describe('Wide content scenarios', () => {
     it('adds has-full-page-document body class when hasWideContent is true', () => {
-      const useHasContent = require('@eeacms/volto-block-toc/hooks/useHasContent');
       useHasContent.mockReturnValue(true);
 
       render(<WrappedComponent hasWideContent={true} />);
@@ -514,7 +519,6 @@ describe('withEEASideMenu', () => {
     });
 
     it('uses #page-document as insertBefore when hasWideContent is true on desktop', () => {
-      const useHasContent = require('@eeacms/volto-block-toc/hooks/useHasContent');
       useHasContent.mockReturnValue(true);
 
       // Create page-document element
@@ -534,7 +538,6 @@ describe('withEEASideMenu', () => {
     });
 
     it('ignores #page-document insertBefore on mobile even with wide content', () => {
-      const useHasContent = require('@eeacms/volto-block-toc/hooks/useHasContent');
       useHasContent.mockReturnValue(true);
 
       render(
