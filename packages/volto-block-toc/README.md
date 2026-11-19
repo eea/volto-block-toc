@@ -10,6 +10,19 @@
 
 Demo GIF
 
+## Upgrade
+
+### Upgrading to 10.x
+
+> This version requires `Volto 18` or `Volto 19` and Node.js 22.
+
+This release adds Volto 19 support and publishes the package from `packages/volto-block-toc`. The block keeps the same API, so upgrading from 9.x on Volto 18 needs no code changes.
+
+#### Breaking changes
+
+- **Node.js 22 or newer is required** (`engines.node >= 22`), 9.x declared no engine.
+- **React is now a peer dependency.** The package declares `react` and `react-dom` as `^18.2.0` peers, where 9.x declared none, so the project has to provide React 18 itself.
+
 ## Requirements
 
 ### Backend
