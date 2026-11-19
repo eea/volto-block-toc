@@ -14,3 +14,13 @@ package-lock.json
 
 node_modules
 build
+.*project
+.settings/
+.vscode
+*~
+acceptance/cypress/videos/
+acceptance/node_modules
+.storybook-build
+/core
+results
+/public
